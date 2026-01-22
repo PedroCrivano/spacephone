@@ -25,7 +25,7 @@
 
 .logo h1 {
   font-size: 3rem;
-  color: var(--primary);
+  color: #000000;
   font-weight: 700;
 }
 
@@ -61,6 +61,54 @@
   color: var(--text);
   margin-bottom: 1.5rem;
   text-align: center;
+}
+
+.searchContainer {
+  position: relative;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 1.5rem 3rem 1.5rem 1.5rem;
+  font-size: 1.3rem;
+  border: 3px solid var(--border);
+  border-radius: 16px;
+  outline: none;
+  transition: all 0.3s;
+  background: white;
+}
+
+.searchInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(72, 187, 120, 0.1);
+}
+
+.clearSearch {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--text-light);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.clearSearch:hover {
+  background: var(--danger);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .servicesGrid {
@@ -194,6 +242,12 @@
   color: var(--text);
 }
 
+.cartItemModel {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 .cartItemPrice {
   color: var(--text-light);
   font-size: 0.95rem;
@@ -268,6 +322,110 @@
   text-align: center;
   color: var(--text-light);
   font-size: 1.1rem;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalTitle {
+  font-size: 2rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.modalSubtitle {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.modelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.modelButton {
+  background: var(--bg-light);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+}
+
+.modelButton:hover {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  border-color: #38a169;
+  transform: translateY(-2px);
+}
+
+.cancelButton {
+  width: 100%;
+  padding: 1.2rem;
+  background: var(--text-light);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: var(--danger);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 1200px) {

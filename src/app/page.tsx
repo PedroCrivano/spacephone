@@ -10,6 +10,27 @@ interface Service {
   icon: string
 }
 
+interface SelectedService {
+  serviceId: number
+  model: string
+}
+
+const phoneModels = [
+  'iPhone 15 Pro Max',
+  'iPhone 15 Pro',
+  'iPhone 15',
+  'iPhone 14 Pro Max',
+  'iPhone 14',
+  'iPhone 13',
+  'Samsung Galaxy S24 Ultra',
+  'Samsung Galaxy S24',
+  'Samsung Galaxy S23',
+  'Samsung Galaxy A54',
+  'Xiaomi 13 Pro',
+  'Motorola Edge 40',
+  'Outro modelo'
+]
+
 const services: Service[] = [
   { id: 1, name: 'Troca de Tela', price: 299.90, icon: '📱' },
   { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '🔋' },
@@ -26,25 +47,53 @@ const services: Service[] = [
 ]
 
 export default function Home() {
-  const [selectedServices, setSelectedServices] = useState<number[]>([])
+  const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [currentService, setCurrentService] = useState<Service | null>(null)
 
-  const toggleService = (id: number) => {
-    setSelectedServices(prev =>
-      prev.includes(id)
-        ? prev.filter(serviceId => serviceId !== id)
-        : [...prev, id]
-    )
+  const toggleService = (service: Service) => {
+    const isSelected = selectedServices.some(s => s.serviceId === service.id)
+    
+    if (isSelected) {
+      setSelectedServices(prev => prev.filter(s => s.serviceId !== service.id))
+    } else {
+      setCurrentService(service)
+      setShowModal(true)
+    }
+  }
+
+  const addServiceWithModel = (model: string) => {
+    if (currentService) {
+      setSelectedServices(prev => [...prev, { serviceId: currentService.id, model }])
+      setShowModal(false)
+      setCurrentService(null)
+    }
+  }
+
+  const removeService = (index: number) => {
+    setSelectedServices(prev => prev.filter((_, i) => i !== index))
   }
 
   const getTotal = () => {
-    return selectedServices.reduce((total, id) => {
-      const service = services.find(s => s.id === id)
+    return selectedServices.reduce((total, selected) => {
+      const service = services.find(s => s.id === selected.serviceId)
       return total + (service?.price || 0)
     }, 0)
   }
 
   const getSelectedServicesDetails = () => {
-    return selectedServices.map(id => services.find(s => s.id === id)).filter(Boolean) as Service[]
+    return selectedServices.map(selected => {
+      const service = services.find(s => s.id === selected.serviceId)
+      return service ? { ...service, model: selected.model } : null
+    }).filter(Boolean) as (Service & { model: string })[]
+  }
+
+  const getFilteredServices = () => {
+    if (!searchTerm.trim()) return services
+    return services.filter(service => 
+      service.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   }
 
   const handleFinish = () => {
@@ -60,7 +109,6 @@ export default function Home() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🚀</span>
           <h1>Space Phone</h1>
         </div>
         <p className={styles.subtitle}>Assistência Técnica Especializada</p>
@@ -70,21 +118,40 @@ export default function Home() {
         <div className={styles.content}>
           <section className={styles.servicesSection}>
             <h2 className={styles.sectionTitle}>Selecione os Serviços</h2>
+            
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="🔍 Buscar serviço..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
+              />
+              {searchTerm && (
+                <button
+                  className={styles.clearSearch}
+                  onClick={() => setSearchTerm('')}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
             <div className={styles.servicesGrid}>
-              {services.map(service => (
+              {getFilteredServices().map(service => (
                 <button
                   key={service.id}
                   className={`${styles.serviceCard} ${
-                    selectedServices.includes(service.id) ? styles.selected : ''
+                    selectedServices.some(s => s.serviceId === service.id) ? styles.selected : ''
                   }`}
-                  onClick={() => toggleService(service.id)}
+                  onClick={() => toggleService(service)}
                 >
                   <span className={styles.serviceIcon}>{service.icon}</span>
                   <h3 className={styles.serviceName}>{service.name}</h3>
                   <p className={styles.servicePrice}>
                     {service.price === 0 ? 'GRÁTIS' : `R$ ${service.price.toFixed(2)}`}
                   </p>
-                  {selectedServices.includes(service.id) && (
+                  {selectedServices.some(s => s.serviceId === service.id) && (
                     <div className={styles.checkmark}>✓</div>
                   )}
                 </button>
@@ -101,18 +168,19 @@ export default function Home() {
               ) : (
                 <>
                   <div className={styles.cartItems}>
-                    {getSelectedServicesDetails().map(service => (
-                      <div key={service.id} className={styles.cartItem}>
+                    {getSelectedServicesDetails().map((service, index) => (
+                      <div key={`${service.id}-${index}`} className={styles.cartItem}>
                         <span className={styles.cartItemIcon}>{service.icon}</span>
                         <div className={styles.cartItemInfo}>
                           <span className={styles.cartItemName}>{service.name}</span>
+                          <span className={styles.cartItemModel}>{service.model}</span>
                           <span className={styles.cartItemPrice}>
                             {service.price === 0 ? 'Grátis' : `R$ ${service.price.toFixed(2)}`}
                           </span>
                         </div>
                         <button
                           className={styles.removeBtn}
-                          onClick={() => toggleService(service.id)}
+                          onClick={() => removeService(index)}
                         >
                           ✕
                         </button>
@@ -142,6 +210,34 @@ export default function Home() {
       <footer className={styles.footer}>
         <p>Toque nos serviços desejados • Atendimento rápido e profissional</p>
       </footer>
+
+      {showModal && currentService && (
+        <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h2 className={styles.modalTitle}>Selecione o Aparelho</h2>
+            <p className={styles.modalSubtitle}>{currentService.name}</p>
+            
+            <div className={styles.modelGrid}>
+              {phoneModels.map(model => (
+                <button
+                  key={model}
+                  className={styles.modelButton}
+                  onClick={() => addServiceWithModel(model)}
+                >
+                  {model}
+                </button>
+              ))}
+            </div>
+            
+            <button 
+              className={styles.cancelButton}
+              onClick={() => setShowModal(false)}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
