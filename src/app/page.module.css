@@ -5,18 +5,51 @@
 }
 
 .header {
-  background: rgba(255, 255, 255, 0.98);
+  background: linear-gradient(180deg, rgba(10, 14, 26, 0.95) 0%, rgba(26, 31, 58, 0.95) 100%);
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 217, 163, 0.3);
+  border-bottom: 3px solid var(--primary);
+  position: relative;
+}
+
+.adminLink {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 217, 163, 0.1);
+  border: 2px solid rgba(0, 217, 163, 0.3);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s;
+  opacity: 0.5;
+}
+
+.adminLink:hover {
+  opacity: 1;
+  background: rgba(0, 217, 163, 0.2);
+  border-color: var(--primary);
+  transform: rotate(90deg);
 }
 
 .logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 0.5rem;
+}
+
+.logoImage {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 0 10px rgba(0, 217, 163, 0.5));
 }
 
 .logoIcon {
@@ -25,13 +58,15 @@
 
 .logo h1 {
   font-size: 3rem;
-  color: #000000;
+  color: var(--primary);
   font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(0, 217, 163, 0.5);
 }
 
 .subtitle {
   font-size: 1.3rem;
-  color: var(--text-light);
+  color: rgba(0, 217, 163, 0.8);
 }
 
 .main {
@@ -42,6 +77,295 @@
   width: 100%;
 }
 
+.welcomeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 300px);
+}
+
+.welcomeCard {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.3);
+  border: 2px solid rgba(0, 217, 163, 0.4);
+  max-width: 600px;
+  width: 100%;
+}
+
+.welcomeTitle {
+  font-size: 2.5rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.welcomeText {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.formGroup {
+  margin-bottom: 2rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.8rem;
+}
+
+.formInput,
+.formSelect {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.2rem;
+  border: 3px solid rgba(0, 217, 163, 0.3);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s;
+  background: white;
+  color: var(--text);
+}
+
+.formInput:focus,
+.formSelect:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 217, 163, 0.15), 0 0 20px rgba(0, 217, 163, 0.2);
+}
+
+.formSelect {
+  cursor: pointer;
+}
+
+.startButton {
+  width: 100%;
+  padding: 1.8rem;
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 217, 163, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+}
+
+.startButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.5);
+  background: linear-gradient(135deg, #00ffaa 0%, #00d9a3 100%);
+}
+
+.customerIdInfo {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 217, 163, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 217, 163, 0.2);
+}
+
+.customerIdInfo p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.customerInfo {
+  background: linear-gradient(135deg, rgba(0, 217, 163, 0.05) 0%, rgba(0, 255, 170, 0.05) 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(0, 217, 163, 0.3);
+}
+
+.customerInfoTitle {
+  font-size: 1.3rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.customerInfoItem {
+  font-size: 1rem;
+  color: var(--text);
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.customerInfoItem strong {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.thankYouContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 300px);
+  padding: 2rem;
+}
+
+.thankYouCard {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.3);
+  border: 2px solid rgba(0, 217, 163, 0.4);
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+}
+
+.thankYouIcon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.thankYouTitle {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.thankYouMessage {
+  background: linear-gradient(135deg, rgba(0, 217, 163, 0.05) 0%, rgba(0, 255, 170, 0.05) 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 217, 163, 0.3);
+  margin-bottom: 2rem;
+}
+
+.thankYouMessage p {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin: 0.8rem 0;
+  line-height: 1.6;
+}
+
+.thankYouMessage strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.orderSummary {
+  background: var(--bg-light);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 217, 163, 0.2);
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.orderSummary h3 {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.orderSummary p {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin: 0.8rem 0;
+  line-height: 1.6;
+}
+
+.orderSummary strong {
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.totalHighlight {
+  color: var(--primary);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 217, 163, 0.3);
+}
+
+.notesSection {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.notesLabel {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.notesTextarea {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1.1rem;
+  border: 3px solid rgba(0, 217, 163, 0.3);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s;
+  background: white;
+  color: var(--text);
+  resize: vertical;
+  font-family: inherit;
+}
+
+.notesTextarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 217, 163, 0.15), 0 0 20px rgba(0, 217, 163, 0.2);
+}
+
+.notesTextarea::placeholder {
+  color: var(--text-light);
+  opacity: 0.6;
+}
+
+.backToStartButton {
+  width: 100%;
+  padding: 1.8rem;
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 217, 163, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.backToStartButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.5);
+  background: linear-gradient(135deg, #00ffaa 0%, #00d9a3 100%);
+}
+
 .content {
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -50,10 +374,11 @@
 }
 
 .servicesSection {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.2);
+  border: 2px solid rgba(0, 217, 163, 0.3);
 }
 
 .sectionTitle {
@@ -75,7 +400,7 @@
   width: 100%;
   padding: 1.5rem 3rem 1.5rem 1.5rem;
   font-size: 1.3rem;
-  border: 3px solid var(--border);
+  border: 3px solid rgba(0, 217, 163, 0.3);
   border-radius: 16px;
   outline: none;
   transition: all 0.3s;
@@ -84,7 +409,7 @@
 
 .searchInput:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(72, 187, 120, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 217, 163, 0.15), 0 0 20px rgba(0, 217, 163, 0.2);
 }
 
 .clearSearch {
@@ -119,7 +444,7 @@
 
 .serviceCard {
   background: white;
-  border: 3px solid var(--border);
+  border: 3px solid rgba(0, 217, 163, 0.3);
   border-radius: 16px;
   padding: 2rem 1.5rem;
   cursor: pointer;
@@ -135,14 +460,16 @@
 
 .serviceCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 217, 163, 0.4);
   border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(0, 217, 163, 0.05) 0%, rgba(0, 255, 170, 0.05) 100%);
 }
 
 .serviceCard.selected {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: var(--primary-dark);
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
+  border-color: var(--primary);
   color: white;
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.5);
 }
 
 .serviceIcon {
@@ -187,10 +514,11 @@
 }
 
 .cart {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 217, 163, 0.2);
+  border: 2px solid rgba(0, 217, 163, 0.3);
 }
 
 .cartTitle {
@@ -223,7 +551,7 @@
   padding: 1rem;
   background: var(--bg-light);
   border-radius: 12px;
-  border: 2px solid var(--border);
+  border: 2px solid rgba(0, 217, 163, 0.2);
 }
 
 .cartItemIcon {
@@ -245,7 +573,7 @@
 .cartItemModel {
   color: var(--primary);
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .cartItemPrice {
@@ -278,24 +606,25 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  background: var(--bg-light);
+  background: linear-gradient(135deg, rgba(0, 217, 163, 0.05) 0%, rgba(0, 255, 170, 0.05) 100%);
   border-radius: 12px;
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
   font-weight: 600;
-  border: 2px solid var(--border);
+  border: 2px solid rgba(0, 217, 163, 0.3);
 }
 
 .totalValue {
   color: var(--primary);
   font-size: 1.8rem;
   font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 217, 163, 0.3);
 }
 
 .finishBtn {
   width: 100%;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -303,11 +632,15 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 217, 163, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .finishBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(72, 187, 120, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 217, 163, 0.5);
+  background: linear-gradient(135deg, #00ffaa 0%, #00d9a3 100%);
 }
 
 .finishBtn:disabled {
@@ -317,11 +650,12 @@
 }
 
 .footer {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(180deg, rgba(26, 31, 58, 0.95) 0%, rgba(10, 14, 26, 0.95) 100%);
   padding: 1.5rem;
   text-align: center;
-  color: var(--text-light);
+  color: rgba(0, 217, 163, 0.8);
   font-size: 1.1rem;
+  border-top: 2px solid rgba(0, 217, 163, 0.3);
 }
 
 .modalOverlay {
@@ -404,10 +738,11 @@
 }
 
 .modelButton:hover {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
   color: white;
-  border-color: #38a169;
+  border-color: var(--primary);
   transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 217, 163, 0.3);
 }
 
 .cancelButton {

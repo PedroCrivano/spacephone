@@ -12,19 +12,21 @@ body {
 }
 
 body {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a3a2e 50%, #2d5a4a 100%);
   min-height: 100vh;
 }
 
 :root {
-  --primary: #667eea;
-  --primary-dark: #5568d3;
-  --secondary: #764ba2;
-  --success: #48bb78;
+  --primary: #00d9a3;
+  --primary-dark: #00b386;
+  --secondary: #1a1f3a;
+  --success: #00d9a3;
   --danger: #f56565;
-  --text: #2d3748;
-  --text-light: #718096;
+  --text: #1a1f3a;
+  --text-light: #4a5568;
   --bg: #ffffff;
-  --bg-light: #f7fafc;
-  --border: #e2e8f0;
+  --bg-light: #f0fdf4;
+  --border: #00d9a3;
+  --space-blue: #1a1f3a;
+  --neon-green: #00ffaa;
 }
