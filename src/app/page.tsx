@@ -599,8 +599,6 @@ export default function Home() {
                   />
                 </div>
               )}
-                />
-              </div>
 
               <div className={styles.formGroup}>
                 <label htmlFor="device-model" className={styles.formLabel}>
@@ -634,7 +632,8 @@ export default function Home() {
             </div>
           </div>
         </main>
-        </>
+      ) : null}
+      </>
       )}
       
       {currentScreen === 'services' && isFinished && (
