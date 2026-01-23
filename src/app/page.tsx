@@ -31,8 +31,16 @@ interface CustomerData {
   id: string
   name: string
   phone: string
+  cpf: string
   deviceModel: string
   timestamp: string
+}
+
+interface SavedCustomer {
+  name: string
+  cpf: string
+  phone: string
+  lastDeviceModel: string
 }
 
 const phoneModels = [
@@ -138,6 +146,10 @@ const services: Service[] = [
 ]
 
 export default function Home() {
+  // Screen control states
+  const [currentScreen, setCurrentScreen] = useState<'welcome' | 'phone-login' | 'register' | 'services'>('welcome')
+  const [isGuestMode, setIsGuestMode] = useState(false)
+  
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos')
@@ -154,6 +166,7 @@ export default function Home() {
     id: '',
     name: '',
     phone: '',
+    cpf: '',
     deviceModel: '',
     timestamp: ''
   })
@@ -161,6 +174,7 @@ export default function Home() {
   // Form states
   const [formName, setFormName] = useState('')
   const [formPhone, setFormPhone] = useState('')
+  const [formCpf, setFormCpf] = useState('')
   const [formDeviceModel, setFormDeviceModel] = useState('')
 
   const formatPhoneNumber = (value: string) => {
@@ -185,6 +199,67 @@ export default function Home() {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value)
     setFormPhone(formatted)
+  }
+
+  const formatCpf = (value: string) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 11)
+    
+    if (numbers.length <= 3) {
+      return numbers
+    } else if (numbers.length <= 6) {
+      return `${numbers.slice(0, 3)}.${numbers.slice(3)}`
+    } else if (numbers.length <= 9) {
+      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`
+    } else {
+      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9)}`
+    }
+  }
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatCpf(e.target.value)
+    setFormCpf(formatted)
+  }
+
+  const handleLoginWithPhone = () => {
+    setCurrentScreen('phone-login')
+  }
+
+  const handleGuestAccess = () => {
+    setIsGuestMode(true)
+    setCurrentScreen('register')
+  }
+
+  const handlePhoneLogin = () => {
+    if (!formPhone.trim()) {
+      alert('Por favor, informe seu número de telefone!')
+      return
+    }
+
+    // Buscar cliente salvo no localStorage
+    try {
+      const savedCustomers = localStorage.getItem('spacephone_customers')
+      if (savedCustomers) {
+        const customers: SavedCustomer[] = JSON.parse(savedCustomers)
+        const cleanPhone = formPhone.replace(/\D/g, '')
+        const existingCustomer = customers.find(c => c.phone.replace(/\D/g, '') === cleanPhone)
+
+        if (existingCustomer) {
+          // Cliente encontrado - preenche automaticamente
+          setFormName(existingCustomer.name)
+          setFormCpf(existingCustomer.cpf)
+          setFormDeviceModel(existingCustomer.lastDeviceModel)
+          setCurrentScreen('register')
+        } else {
+          // Cliente novo - vai para tela de cadastro
+          setCurrentScreen('register')
+        }
+      } else {
+        setCurrentScreen('register')
+      }
+    } catch (error) {
+      console.error('Erro ao verificar cliente:', error)
+      setCurrentScreen('register')
+    }
   }
 
   const toggleService = (service: Service) => {
@@ -234,6 +309,12 @@ export default function Home() {
       return
     }
     
+    // Se não for modo convidado e não tiver CPF, solicita
+    if (!isGuestMode && !formCpf.trim()) {
+      alert('Por favor, informe seu CPF!')
+      return
+    }
+    
     const customerId = `CLT-${Date.now()}`
     const timestamp = new Date().toISOString()
     
@@ -241,12 +322,43 @@ export default function Home() {
       id: customerId,
       name: formName.trim(),
       phone: formPhone.trim(),
+      cpf: formCpf.trim(),
       deviceModel: formDeviceModel,
       timestamp
     }
     
     setCustomerData(newCustomerData)
+    
+    // Salvar cliente no localStorage se não for modo convidado
+    if (!isGuestMode) {
+      try {
+        const savedCustomers = localStorage.getItem('spacephone_customers')
+        const customers: SavedCustomer[] = savedCustomers ? JSON.parse(savedCustomers) : []
+        
+        const cleanPhone = formPhone.replace(/\D/g, '')
+        const existingIndex = customers.findIndex(c => c.phone.replace(/\D/g, '') === cleanPhone)
+        
+        const customerToSave: SavedCustomer = {
+          name: formName.trim(),
+          cpf: formCpf.trim(),
+          phone: formPhone.trim(),
+          lastDeviceModel: formDeviceModel
+        }
+        
+        if (existingIndex >= 0) {
+          customers[existingIndex] = customerToSave
+        } else {
+          customers.push(customerToSave)
+        }
+        
+        localStorage.setItem('spacephone_customers', JSON.stringify(customers))
+      } catch (error) {
+        console.error('Erro ao salvar cliente:', error)
+      }
+    }
+    
     setIsRegistered(true)
+    setCurrentScreen('services')
     
     console.log('Cliente registrado:', newCustomerData)
   }
@@ -351,12 +463,16 @@ export default function Home() {
     setAdditionalNotes('')
     setFormName('')
     setFormPhone('')
+    setFormCpf('')
     setFormDeviceModel('')
     setSearchTerm('')
+    setCurrentScreen('welcome')
+    setIsGuestMode(false)
     setCustomerData({
       id: '',
       name: '',
       phone: '',
+      cpf: '',
       deviceModel: '',
       timestamp: ''
     })
@@ -364,6 +480,65 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      {/* Welcome Screen */}
+      {currentScreen === 'welcome' && (
+        <div className={styles.welcomeScreen}>
+          <div className={styles.welcomeContent}>
+            <h1 className={styles.welcomeBrand}>SPACE PHONE</h1>
+            <div className={styles.welcomeLogo}>📱</div>
+            
+            <div className={styles.welcomeButtons}>
+              <button 
+                onClick={handleLoginWithPhone}
+                className={styles.loginButton}
+              >
+                Login com Telefone
+              </button>
+              <button 
+                onClick={handleGuestAccess}
+                className={styles.guestButton}
+              >
+                Entrar sem Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Phone Login Screen */}
+      {currentScreen === 'phone-login' && (
+        <div className={styles.welcomeScreen}>
+          <div className={styles.welcomeContent}>
+            <h1 className={styles.welcomeBrand}>SPACE PHONE</h1>
+            <h2 className={styles.loginSubtitle}>Digite seu telefone para continuar</h2>
+            
+            <div className={styles.phoneLoginForm}>
+              <input
+                type="tel"
+                value={formPhone}
+                onChange={handlePhoneChange}
+                placeholder="(00) 00000-0000"
+                className={styles.phoneLoginInput}
+              />
+              <button 
+                onClick={handlePhoneLogin}
+                className={styles.continueButton}
+              >
+                Continuar
+              </button>
+              <button 
+                onClick={() => setCurrentScreen('welcome')}
+                className={styles.backButtonSimple}
+              >
+                Voltar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {currentScreen === 'register' && (
+      <>
       <header className={styles.header}>
         <div className={styles.logo}>
           <h1>SPACE PHONE</h1>
@@ -375,12 +550,14 @@ export default function Home() {
         <main className={styles.main}>
           <div className={styles.welcomeContainer}>
             <div className={styles.welcomeCard}>
-              <h2 className={styles.welcomeTitle}>Bem-vindo ao Atendimento</h2>
+              <h2 className={styles.welcomeTitle}>
+                {isGuestMode ? 'Acesso como Convidado' : 'Bem-vindo ao Atendimento'}
+              </h2>
               <p className={styles.welcomeText}>Por favor, informe seus dados para iniciarmos</p>
               
               <div className={styles.formGroup}>
                 <label htmlFor="customer-name" className={styles.formLabel}>
-                  Nome 
+                  Nome Completo
                 </label>
                 <input
                   id="customer-name"
@@ -403,6 +580,25 @@ export default function Home() {
                   onChange={handlePhoneChange}
                   placeholder="(00) 00000-0000"
                   className={styles.formInput}
+                  disabled={!isGuestMode && formPhone !== ''}
+                />
+              </div>
+
+              {!isGuestMode && (
+                <div className={styles.formGroup}>
+                  <label htmlFor="customer-cpf" className={styles.formLabel}>
+                    CPF
+                  </label>
+                  <input
+                    id="customer-cpf"
+                    type="text"
+                    value={formCpf}
+                    onChange={handleCpfChange}
+                    placeholder="000.000.000-00"
+                    className={styles.formInput}
+                  />
+                </div>
+              )}
                 />
               </div>
 
@@ -430,13 +626,25 @@ export default function Home() {
                 Iniciar Atendimento
               </button>
               
-              <div className={styles.customerIdInfo}>
-                <p>Seu ID de atendimento será gerado ao iniciar</p>
-              </div>
+              {isGuestMode && (
+                <div className={styles.guestModeWarning}>
+                  <p>⚠️ Modo convidado: Seu atendimento não será salvo para acesso futuro</p>
+                </div>
+              )}
             </div>
           </div>
         </main>
-      ) : isFinished ? (
+        </>
+      )}
+      
+      {currentScreen === 'services' && isFinished && (
+        <>
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            <h1>SPACE PHONE</h1>
+          </div>
+          <p className={styles.subtitle}>Assistência Técnica Especializada</p>
+        </header>
         <main className={styles.main}>
           <div className={styles.thankYouContainer}>
             <div className={styles.thankYouCard}>
@@ -446,6 +654,9 @@ export default function Home() {
               <div className={styles.thankYouMessage}>
                 <p>Seu pedido já foi encaminhado para nossos técnicos.</p>
                 <p><strong>Dirija-se a um deles para entregar seu dispositivo.</strong></p>
+                {isGuestMode && (
+                  <p className={styles.guestWarning}>⚠️ Atendimento sem identificação - Não será possível consultar posteriormente</p>
+                )}
               </div>
 
               <div className={styles.orderSummary}>
@@ -478,7 +689,17 @@ export default function Home() {
             </div>
           </div>
         </main>
-      ) : (
+        </>
+      )}
+      
+      {currentScreen === 'services' && !isFinished && (
+        <>
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            <h1>SPACE PHONE</h1>
+          </div>
+          <p className={styles.subtitle}>Assistência Técnica Especializada</p>
+        </header>
         <main className={styles.main}>
         <div className={styles.content}>
           <section className={styles.servicesSection}>
@@ -593,6 +814,7 @@ export default function Home() {
         <p>Toque nos serviços desejados • Atendimento rápido e profissional</p>
       </footer>
       </main>
+      </>
       )}
       
       {/* Modal de Opções de Produtos */}

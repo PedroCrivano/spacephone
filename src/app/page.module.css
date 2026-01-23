@@ -933,3 +933,164 @@
   color: var(--primary);
   margin: 0;
 }
+
+/* Welcome/Login Screens */
+.welcomeScreen {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.welcomeContent {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.welcomeBrand {
+  font-size: 4rem;
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 30px rgba(0, 217, 163, 0.3);
+}
+
+.welcomeLogo {
+  font-size: 8rem;
+  margin: 3rem 0;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.welcomeButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+
+.loginButton,
+.guestButton {
+  padding: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.loginButton {
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 217, 163, 0.3);
+}
+
+.loginButton:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(0, 217, 163, 0.5);
+}
+
+.guestButton {
+  background: white;
+  color: var(--text);
+  border: 3px solid rgba(0, 217, 163, 0.3);
+}
+
+.guestButton:hover {
+  background: rgba(0, 217, 163, 0.05);
+  border-color: var(--primary);
+}
+
+.loginSubtitle {
+  font-size: 1.8rem;
+  color: var(--text);
+  margin: 2rem 0;
+  font-weight: 500;
+}
+
+.phoneLoginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.phoneLoginInput {
+  padding: 2rem;
+  font-size: 1.5rem;
+  border: 3px solid rgba(0, 217, 163, 0.3);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.phoneLoginInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 217, 163, 0.15);
+}
+
+.continueButton {
+  padding: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00d9a3 0%, #00b386 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.continueButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 217, 163, 0.4);
+}
+
+.backButtonSimple {
+  padding: 1.5rem;
+  font-size: 1.2rem;
+  background: transparent;
+  color: var(--text-light);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.backButtonSimple:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.guestModeWarning {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 193, 7, 0.1);
+  border: 2px solid rgba(255, 193, 7, 0.3);
+  border-radius: 12px;
+  color: #856404;
+  font-size: 1rem;
+}
+
+.guestWarning {
+  color: #856404;
+  background: rgba(255, 193, 7, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-weight: 600;
+}
