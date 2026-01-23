@@ -95,6 +95,30 @@ export default function Home() {
   const [formPhone, setFormPhone] = useState('')
   const [formDeviceModel, setFormDeviceModel] = useState('')
 
+  const formatPhoneNumber = (value: string) => {
+    // Remove tudo que não é número
+    const numbers = value.replace(/\D/g, '')
+    
+    // Limita a 11 dígitos
+    const limited = numbers.slice(0, 11)
+    
+    // Aplica a formatação
+    if (limited.length <= 2) {
+      return limited.length > 0 ? `(${limited}` : ''
+    } else if (limited.length <= 6) {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2)}`
+    } else if (limited.length <= 10) {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2, 6)}-${limited.slice(6)}`
+    } else {
+      return `(${limited.slice(0, 2)}) ${limited.slice(2, 7)}-${limited.slice(7, 11)}`
+    }
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value)
+    setFormPhone(formatted)
+  }
+
   const toggleService = (service: Service) => {
     const isSelected = selectedServices.some(s => s.serviceId === service.id)
     
@@ -253,7 +277,7 @@ export default function Home() {
                   id="customer-phone"
                   type="tel"
                   value={formPhone}
-                  onChange={(e) => setFormPhone(e.target.value)}
+                  onChange={handlePhoneChange}
                   placeholder="(00) 00000-0000"
                   className={styles.formInput}
                 />
