@@ -551,7 +551,7 @@ export default function Home() {
           <div className={styles.welcomeContainer}>
             <div className={styles.welcomeCard}>
               <h2 className={styles.welcomeTitle}>
-                {isGuestMode ? 'Acesso como Convidado' : 'Bem-vindo ao Atendimento'}
+                {isGuestMode ? 'Acesso como Convidado' : 'Bem-vindo ao Atendimento da Space Phone'}
               </h2>
               <p className={styles.welcomeText}>Por favor, informe seus dados para iniciarmos</p>
               
