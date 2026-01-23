@@ -8,11 +8,23 @@ interface Service {
   name: string
   price: number
   icon: string
+  category: string
+  hasOptions?: boolean
+}
+
+interface ProductOption {
+  id: string
+  name: string
+  price: number
+  image: string
+  description: string
 }
 
 interface SelectedService {
   serviceId: number
   model: string
+  optionId?: string
+  optionName?: string
 }
 
 interface CustomerData {
@@ -57,26 +69,82 @@ const phoneModels = [
   'Outro modelo'
 ]
 
+const capinhaOptions: ProductOption[] = [
+  {
+    id: 'cap-silicone-preto',
+    name: 'Capinha Silicone Preta',
+    price: 39.90,
+    image: '🖤',
+    description: 'Proteção básica em silicone'
+  },
+  {
+    id: 'cap-silicone-transparente',
+    name: 'Capinha Silicone Transparente',
+    price: 39.90,
+    image: '🧊',
+    description: 'Silicone transparente para mostrar o aparelho'
+  },
+  {
+    id: 'cap-silicone-colorida',
+    name: 'Capinha Silicone Colorida',
+    price: 44.90,
+    image: '🌈',
+    description: 'Várias cores disponíveis'
+  },
+  {
+    id: 'cap-couro',
+    name: 'Capinha Couro Premium',
+    price: 89.90,
+    image: '📖',
+    description: 'Couro sintético de alta qualidade'
+  },
+  {
+    id: 'cap-militar',
+    name: 'Capinha Anti-Impacto Militar',
+    price: 79.90,
+    image: '🛡️',
+    description: 'Máxima proteção contra quedas'
+  },
+  {
+    id: 'cap-magnetica',
+    name: 'Capinha Magnética',
+    price: 69.90,
+    image: '🧲',
+    description: 'Compatível com carregador MagSafe'
+  },
+]
+
 const services: Service[] = [
-  { id: 1, name: 'Troca de Tela', price: 299.90, icon: '📱' },
-  { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '🔋' },
-  { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '🔘' },
-  { id: 4, name: 'Limpeza Interna', price: 79.90, icon: '🧹' },
-  { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '📷' },
-  { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '🔊' },
-  { id: 7, name: 'Troca de Conector', price: 99.90, icon: '🔌' },
-  { id: 8, name: 'Atualização Software', price: 59.90, icon: '⚙️' },
-  { id: 9, name: 'Desbloqueio', price: 89.90, icon: '🔓' },
-  { id: 10, name: 'Película de Vidro', price: 39.90, icon: '🛡️' },
-  { id: 11, name: 'Capinha Proteção', price: 49.90, icon: '📦' },
-  { id: 12, name: 'Diagnóstico Geral', price: 0, icon: '🔍' },
+  // REPAROS
+  { id: 1, name: 'Troca de Tela', price: 299.90, icon: '📱', category: 'Reparos' },
+  { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '🔋', category: 'Reparos' },
+  { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '📷', category: 'Reparos' },
+  { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '🔘', category: 'Reparos' },
+  { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '🔊', category: 'Reparos' },
+  { id: 7, name: 'Troca de Conector', price: 99.90, icon: '🔌', category: 'Reparos' },
+  
+  // PROTEÇÃO
+  { id: 10, name: 'Película de Vidro', price: 39.90, icon: '🛡️', category: 'Proteção' },
+  { id: 11, name: 'Capinha Proteção', price: 49.90, icon: '📦', category: 'Proteção', hasOptions: true },
+  
+  // ACESSÓRIOS
+  { id: 13, name: 'Carregadores', price: 79.90, icon: '⚡', category: 'Acessórios' },
+  
+  // SERVIÇOS
+  { id: 4, name: 'Limpeza Interna', price: 79.90, icon: '🧹', category: 'Serviços' },
+  { id: 8, name: 'Atualização Software', price: 59.90, icon: '⚙️', category: 'Serviços' },
+  { id: 9, name: 'Desbloqueio', price: 89.90, icon: '🔓', category: 'Serviços' },
+  { id: 12, name: 'Diagnóstico Geral', price: 0, icon: '🔍', category: 'Serviços' },
 ]
 
 export default function Home() {
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('Todos')
   const [showModal, setShowModal] = useState(false)
   const [currentService, setCurrentService] = useState<Service | null>(null)
+  const [showProductOptions, setShowProductOptions] = useState(false)
+  const [currentProductService, setCurrentProductService] = useState<Service | null>(null)
   
   // Customer registration states
   const [isRegistered, setIsRegistered] = useState(false)
@@ -120,6 +188,13 @@ export default function Home() {
   }
 
   const toggleService = (service: Service) => {
+    // Se o serviço tem opções de produtos, abre o modal de opções
+    if (service.hasOptions) {
+      setCurrentProductService(service)
+      setShowProductOptions(true)
+      return
+    }
+    
     const isSelected = selectedServices.some(s => s.serviceId === service.id)
     
     if (isSelected) {
@@ -131,6 +206,22 @@ export default function Home() {
         model: customerData.deviceModel 
       }])
     }
+  }
+
+  const handleProductOptionSelect = (option: ProductOption) => {
+    if (!currentProductService) return
+    
+    // Adiciona o serviço com a opção específica selecionada
+    setSelectedServices(prev => [...prev, {
+      serviceId: currentProductService.id,
+      model: customerData.deviceModel,
+      optionId: option.id,
+      optionName: option.name
+    }])
+    
+    // Fecha o modal de opções
+    setShowProductOptions(false)
+    setCurrentProductService(null)
   }
 
   const removeService = (index: number) => {
@@ -162,6 +253,12 @@ export default function Home() {
 
   const getTotal = () => {
     return selectedServices.reduce((total, selected) => {
+      // Se tiver optionId, busca o preço da opção específica
+      if (selected.optionId) {
+        const option = capinhaOptions.find(opt => opt.id === selected.optionId)
+        return total + (option?.price || 0)
+      }
+      // Senão, usa o preço padrão do serviço
       const service = services.find(s => s.id === selected.serviceId)
       return total + (service?.price || 0)
     }, 0)
@@ -170,16 +267,42 @@ export default function Home() {
   const getSelectedServicesDetails = () => {
     return selectedServices.map(selected => {
       const service = services.find(s => s.id === selected.serviceId)
-      return service ? { ...service, model: selected.model } : null
+      if (!service) return null
+      
+      // Se tiver opção específica, retorna com o nome e preço da opção
+      if (selected.optionId && selected.optionName) {
+        const option = capinhaOptions.find(opt => opt.id === selected.optionId)
+        return {
+          ...service,
+          name: selected.optionName,
+          price: option?.price || service.price,
+          model: selected.model
+        }
+      }
+      
+      return { ...service, model: selected.model }
     }).filter(Boolean) as (Service & { model: string })[]
   }
 
   const getFilteredServices = () => {
-    if (!searchTerm.trim()) return services
-    return services.filter(service => 
-      service.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    let filtered = services
+    
+    // Filtrar por categoria
+    if (selectedCategory !== 'Todos') {
+      filtered = filtered.filter(service => service.category === selectedCategory)
+    }
+    
+    // Filtrar por busca
+    if (searchTerm.trim()) {
+      filtered = filtered.filter(service => 
+        service.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+    
+    return filtered
   }
+
+  const categories = ['Todos', 'Reparos', 'Proteção', 'Acessórios', 'Serviços']
 
   const handleFinish = () => {
     if (selectedServices.length === 0) {
@@ -361,6 +484,18 @@ export default function Home() {
           <section className={styles.servicesSection}>
             <h2 className={styles.sectionTitle}>Selecione os Serviços</h2>
             
+            <div className={styles.categoriesBar}>
+              {categories.map(category => (
+                <button
+                  key={category}
+                  className={`${styles.categoryBtn} ${selectedCategory === category ? styles.activeCategory : ''}`}
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            
             <div className={styles.searchContainer}>
               <input
                 type="text"
@@ -458,6 +593,38 @@ export default function Home() {
         <p>Toque nos serviços desejados • Atendimento rápido e profissional</p>
       </footer>
       </main>
+      )}
+      
+      {/* Modal de Opções de Produtos */}
+      {showProductOptions && currentProductService && (
+        <div className={styles.modalOverlay} onClick={() => setShowProductOptions(false)}>
+          <div className={styles.productOptionsModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Escolha sua {currentProductService.name}</h2>
+              <button 
+                className={styles.closeModal}
+                onClick={() => setShowProductOptions(false)}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className={styles.productOptionsGrid}>
+              {capinhaOptions.map(option => (
+                <div 
+                  key={option.id}
+                  className={styles.productOptionCard}
+                  onClick={() => handleProductOptionSelect(option)}
+                >
+                  <div className={styles.productOptionImage}>{option.image}</div>
+                  <h3 className={styles.productOptionName}>{option.name}</h3>
+                  <p className={styles.productOptionDescription}>{option.description}</p>
+                  <p className={styles.productOptionPrice}>R$ {option.price.toFixed(2)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
