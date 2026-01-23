@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0e1a 0%, #1a3a2e 50%, #2d5a4a 100%);
+  background: #ffffff;
 }
 
 .header {
@@ -12,9 +12,10 @@
 
 .headerTop {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative;
 }
 
 .logo {
@@ -38,6 +39,8 @@
 }
 
 .backLink {
+  position: absolute;
+  right: 0;
   background: rgba(0, 217, 163, 0.1);
   color: #00d9a3;
   padding: 0.8rem 1.5rem;

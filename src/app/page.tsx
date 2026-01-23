@@ -24,12 +24,30 @@ interface CustomerData {
 }
 
 const phoneModels = [
+  'iPhone 17 Pro Max',
+  'iPhone 17 Pro',
+  'iPhone 17 Air',
+  'iPhone 17',
+  'iPhone 16 Pro Max',
+  'iPhone 16 Pro',
+  'iPhone 16 Plus',
+  'iPhone 16',
   'iPhone 15 Pro Max',
   'iPhone 15 Pro',
+  'iPhone 15 Plus',
   'iPhone 15',
   'iPhone 14 Pro Max',
+  'iPhone 14 Pro',
+  'iPhone 14 Plus',
   'iPhone 14',
+  'iPhone 13 Pro Max',
+  'iPhone 13 Pro',
   'iPhone 13',
+  'iPhone 13 mini',
+  'iPhone 12 Pro Max',
+  'iPhone 12 Pro',
+  'iPhone 12',
+  'iPhone 12 mini',
   'Samsung Galaxy S24 Ultra',
   'Samsung Galaxy S24',
   'Samsung Galaxy S23',
@@ -201,11 +219,9 @@ export default function Home() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <img src="/logo.svg" alt="SpacePhones Logo" className={styles.logoImage} />
-          <h1>SPACEPHONES</h1>
+          <h1>SPACE PHONE</h1>
         </div>
         <p className={styles.subtitle}>Assistência Técnica Especializada</p>
-        <a href="/admin" className={styles.adminLink} title="Acessar Dashboard">⚙️</a>
       </header>
 
       {!isRegistered ? (
@@ -217,7 +233,7 @@ export default function Home() {
               
               <div className={styles.formGroup}>
                 <label htmlFor="customer-name" className={styles.formLabel}>
-                  Nome Completo
+                  Nome 
                 </label>
                 <input
                   id="customer-name"
@@ -287,7 +303,6 @@ export default function Home() {
 
               <div className={styles.orderSummary}>
                 <h3>Resumo do Pedido</h3>
-                <p><strong>ID:</strong> {customerData.id}</p>
                 <p><strong>Cliente:</strong> {customerData.name}</p>
                 <p><strong>Aparelho:</strong> {customerData.deviceModel}</p>
                 <p><strong>Total:</strong> <span className={styles.totalHighlight}>R$ {getTotal().toFixed(2)}</span></p>
@@ -366,7 +381,6 @@ export default function Home() {
             <div className={styles.cart}>
               <div className={styles.customerInfo}>
                 <h3 className={styles.customerInfoTitle}>Atendimento</h3>
-                <p className={styles.customerInfoItem}><strong>ID:</strong> {customerData.id}</p>
                 <p className={styles.customerInfoItem}><strong>Cliente:</strong> {customerData.name}</p>
                 <p className={styles.customerInfoItem}><strong>Aparelho:</strong> {customerData.deviceModel}</p>
               </div>

@@ -105,8 +105,7 @@ export default function AdminDashboard() {
       <header className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.logo}>
-            <img src="/logo.svg" alt="SpacePhones Logo" className={styles.logoImage} />
-            <h1>SPACEPHONES</h1>
+            <h1>SPACE PHONE</h1>
           </div>
           <Link href="/" className={styles.backLink}>
             ← Voltar ao Totem
