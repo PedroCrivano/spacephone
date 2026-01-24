@@ -502,6 +502,9 @@ export default function Home() {
               </button>
             </div>
           </div>
+          <footer className={styles.loginFooter}>
+            Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
+          </footer>
         </div>
       )}
 
@@ -534,6 +537,9 @@ export default function Home() {
               </button>
             </div>
           </div>
+          <footer className={styles.loginFooter}>
+            Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
+          </footer>
         </div>
       )}
 
