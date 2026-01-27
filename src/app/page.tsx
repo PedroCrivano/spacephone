@@ -158,6 +158,9 @@ export default function Home() {
   const [currentService, setCurrentService] = useState<Service | null>(null)
   const [showProductOptions, setShowProductOptions] = useState(false)
   const [currentProductService, setCurrentProductService] = useState<Service | null>(null)
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [selectedCategoryForModal, setSelectedCategoryForModal] = useState<string | null>(null)
+  const [selectedProductsInModal, setSelectedProductsInModal] = useState<number[]>([])
   
   // Customer registration states
   const [isRegistered, setIsRegistered] = useState(false)
@@ -481,32 +484,141 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      {/* Welcome Screen */}
+      {/* Welcome Screen - New Home Page */}
       {currentScreen === 'welcome' && (
-        <div className={styles.welcomeScreen}>
-          <div className={styles.welcomeContent}>
-            <h1 className={styles.welcomeBrand}>SPACE PHONE</h1>
-            <div className={styles.welcomeLogo}>📱</div>
-            
-            <div className={styles.welcomeButtons}>
-              <button 
-                onClick={handleLoginWithPhone}
-                className={styles.loginButton}
+        <>
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            <h1>SPACE PHONE</h1>
+          </div>
+          <p className={styles.subtitle}>Assistência Técnica Especializada</p>
+        </header>
+        
+        <main className={styles.mainHome}>
+          {/* Search Bar */}
+          <div className={styles.searchBarHome}>
+            <input
+              type="text"
+              placeholder="Buscar produtos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInputHome}
+            />
+            <button className={styles.searchButtonHome}>
+              🔍
+            </button>
+          </div>
+
+          {/* Promotions Area */}
+          <div className={styles.promotionArea}>
+            <p className={styles.promotionText}>Espaço para Promoções</p>
+          </div>
+
+          {/* Categories Buttons */}
+          <div className={styles.categoriesContainer}>
+            {categories.map(category => (
+              <button
+                key={category}
+                className={styles.categoryButtonHome}
+                onClick={() => {
+                  setSelectedCategoryForModal(category)
+                  setShowCategoryModal(true)
+                  setSelectedProductsInModal([])
+                }}
               >
-                Login com Telefone
+                {category}
               </button>
-              <button 
-                onClick={handleGuestAccess}
-                className={styles.guestButton}
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className={styles.actionButtonsContainer}>
+            <button 
+              onClick={handleLoginWithPhone}
+              className={styles.loginButtonHome}
+            >
+              Login com Telefone
+            </button>
+            <button 
+              onClick={handleGuestAccess}
+              className={styles.guestButtonHome}
+            >
+              Entrar sem Login
+            </button>
+          </div>
+        </main>
+
+        {/* Category Products Modal */}
+        {showCategoryModal && selectedCategoryForModal && (
+          <div className={styles.modalOverlay} onClick={() => setShowCategoryModal(false)}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>{selectedCategoryForModal}</h2>
+                <button
+                  className={styles.modalCloseBtn}
+                  onClick={() => setShowCategoryModal(false)}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className={styles.productsList}>
+                {services
+                  .filter(s => selectedCategoryForModal === 'Todos' || s.category === selectedCategoryForModal)
+                  .filter(s => 
+                    searchTerm === '' || s.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map(product => (
+                    <div
+                      key={product.id}
+                      className={`${styles.productCard} ${
+                        selectedProductsInModal.includes(product.id) ? styles.selected : ''
+                      }`}
+                      onClick={() => {
+                        if (selectedProductsInModal.includes(product.id)) {
+                          setSelectedProductsInModal(selectedProductsInModal.filter(id => id !== product.id))
+                        } else {
+                          setSelectedProductsInModal([...selectedProductsInModal, product.id])
+                        }
+                      }}
+                    >
+                      <span className={styles.productIcon}>{product.icon}</span>
+                      <h3 className={styles.productName}>{product.name}</h3>
+                      <p className={styles.productPrice}>
+                        {product.price === 0 ? 'GRÁTIS' : `R$ ${product.price.toFixed(2)}`}
+                      </p>
+                      {selectedProductsInModal.includes(product.id) && (
+                        <div className={styles.productCheckmark}>✓</div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+
+              <button
+                className={styles.selectButton}
+                onClick={() => {
+                  const selectedProds = services.filter(s => selectedProductsInModal.includes(s.id))
+                  selectedProds.forEach(prod => {
+                    setSelectedServices([...selectedServices, {
+                      serviceId: prod.id,
+                      model: customerData.deviceModel || 'Não especificado'
+                    }])
+                  })
+                  setShowCategoryModal(false)
+                  setSelectedProductsInModal([])
+                }}
+                disabled={selectedProductsInModal.length === 0}
               >
-                Entrar sem Login
+                Selecionar
               </button>
             </div>
           </div>
-          <footer className={styles.loginFooter}>
-            Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
-          </footer>
-        </div>
+        )}
+
+        <footer className={styles.loginFooter}>
+          Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
+        </footer>
+        </>
       )}
 
       {/* Phone Login Screen */}
