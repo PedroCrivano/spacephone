@@ -149,6 +149,7 @@ export default function Home() {
   // Screen control states
   const [currentScreen, setCurrentScreen] = useState<'welcome' | 'phone-login' | 'register' | 'services'>('welcome')
   const [isGuestMode, setIsGuestMode] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -705,6 +706,47 @@ export default function Home() {
           </div>
           <p className={styles.subtitle}>Assistência Técnica Especializada</p>
         </header>
+        
+        {/* Sidebar Toggle Button */}
+        <button 
+          className={styles.sidebarToggle}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          title="Abrir menu de serviços"
+        >
+          ☰
+        </button>
+
+        {/* Sidebar Overlay */}
+        <div 
+          className={`${styles.sidebarOverlay} ${sidebarOpen ? styles.open : ''}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
+        {/* Sidebar Menu */}
+        <nav className={`${styles.sidebarMenu} ${sidebarOpen ? styles.open : ''}`}>
+          <h2 className={styles.sidebarMenuTitle}>Serviços</h2>
+          <div className={styles.sidebarMenuList}>
+            {getFilteredServices().map(service => (
+              <button
+                key={service.id}
+                className={`${styles.sidebarMenuItem} ${
+                  selectedServices.some(s => s.serviceId === service.id) ? styles.selected : ''
+                }`}
+                onClick={() => {
+                  toggleService(service)
+                  setSidebarOpen(false)
+                }}
+              >
+                <span className={styles.sidebarMenuItemIcon}>{service.icon}</span>
+                <span className={styles.sidebarMenuItemName}>{service.name}</span>
+                <span className={styles.sidebarMenuItemPrice}>
+                  {service.price === 0 ? 'GRÁTIS' : `R$ ${service.price.toFixed(2)}`}
+                </span>
+              </button>
+            ))}
+          </div>
+        </nav>
+
         <main className={styles.main}>
         <div className={styles.content}>
           <section className={styles.servicesSection}>
