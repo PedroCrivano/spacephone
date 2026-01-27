@@ -145,6 +145,101 @@ const services: Service[] = [
   { id: 12, name: 'Diagnóstico Geral', price: 0, icon: '🔍', category: 'Serviços' },
 ]
 
+// Nova estrutura de categorias principais
+interface CategoryItem {
+  id: string
+  name: string
+  icon: string
+  color: string
+  items: Array<{
+    id: number
+    name: string
+    price: number
+    icon: string
+  }>
+}
+
+interface Promotion {
+  id: string
+  title: string
+  image: string
+  discount?: string
+}
+
+const mainCategories: CategoryItem[] = [
+  {
+    id: 'manutencao',
+    name: 'Manutenção',
+    icon: '🔧',
+    color: '#ff6b6b',
+    items: [
+      { id: 1, name: 'Troca de Tela', price: 299.90, icon: '📱' },
+      { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '🔋' },
+      { id: 7, name: 'Troca de Conector', price: 99.90, icon: '🔌' },
+      { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '📷' },
+      { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '🔘' },
+      { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '🔊' },
+    ]
+  },
+  {
+    id: 'eletronicos',
+    name: 'Eletrônicos',
+    icon: '🎧',
+    color: '#0066ff',
+    items: [
+      { id: 20, name: 'Fones', price: 89.90, icon: '🎧' },
+      { id: 21, name: 'Carregadores', price: 79.90, icon: '⚡' },
+      { id: 22, name: 'Caixas de Som', price: 199.90, icon: '🔊' },
+      { id: 23, name: 'Carregadores Portáteis', price: 129.90, icon: '🔋' },
+      { id: 24, name: 'Cabos de Carregamento', price: 39.90, icon: '🔌' },
+    ]
+  },
+  {
+    id: 'blindagem',
+    name: 'Blindagem',
+    icon: '🛡️',
+    color: '#00cc88',
+    items: [
+      { id: 30, name: 'Capinhas Resistentes', price: 79.90, icon: '🛡️' },
+      { id: 31, name: 'Capinhas de Silicone', price: 39.90, icon: '📦' },
+      { id: 32, name: 'Películas', price: 39.90, icon: '✨' },
+    ]
+  }
+]
+
+const promotions: Promotion[] = [
+  {
+    id: 'promo-1',
+    title: 'Fones Premium',
+    image: '🎧',
+    discount: '-20%'
+  },
+  {
+    id: 'promo-2',
+    title: 'Capinhas à Prova d\'Água',
+    image: '🛡️',
+    discount: '-15%'
+  },
+  {
+    id: 'promo-3',
+    title: 'Carregadores Rápidos',
+    image: '⚡',
+    discount: '-25%'
+  },
+  {
+    id: 'promo-4',
+    title: 'Películas de Vidro',
+    image: '✨',
+    discount: '-10%'
+  },
+  {
+    id: 'promo-5',
+    title: 'Kit Completo',
+    image: '📦',
+    discount: '-30%'
+  }
+]
+
 export default function Home() {
   // Screen control states
   const [currentScreen, setCurrentScreen] = useState<'welcome' | 'phone-login' | 'register' | 'services'>('welcome')
@@ -152,8 +247,8 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos')
   const [showModal, setShowModal] = useState(false)
   const [currentService, setCurrentService] = useState<Service | null>(null)
   const [showProductOptions, setShowProductOptions] = useState(false)
@@ -367,6 +462,49 @@ export default function Home() {
     console.log('Cliente registrado:', newCustomerData)
   }
 
+  // Função para calcular distância de Levenshtein (fuzzy search)
+  const levenshteinDistance = (str1: string, str2: string): number => {
+    const s1 = str1.toLowerCase()
+    const s2 = str2.toLowerCase()
+    const lenS1 = s1.length
+    const lenS2 = s2.length
+    const matrix: number[][] = []
+
+    for (let i = 0; i <= lenS2; i++) {
+      matrix[i] = [i]
+    }
+
+    for (let j = 0; j <= lenS1; j++) {
+      matrix[0][j] = j
+    }
+
+    for (let i = 1; i <= lenS2; i++) {
+      for (let j = 1; j <= lenS1; j++) {
+        if (s2.charAt(i - 1) === s1.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1]
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          )
+        }
+      }
+    }
+
+    return matrix[lenS2][lenS1]
+  }
+
+  // Função para verificar se um texto é similar ao termo de busca
+  const isSimilarMatch = (text: string, searchTerm: string): boolean => {
+    if (!searchTerm.trim()) return true
+    
+    const distance = levenshteinDistance(text, searchTerm)
+    const maxDistance = Math.ceil(searchTerm.length * 0.3) // Permite até 30% de diferença
+    
+    return distance <= maxDistance || text.toLowerCase().includes(searchTerm.toLowerCase())
+  }
+
   const getTotal = () => {
     return selectedServices.reduce((total, selected) => {
       // Se tiver optionId, busca o preço da opção específica
@@ -379,6 +517,13 @@ export default function Home() {
       return total + (service?.price || 0)
     }, 0)
   }
+
+  const filteredCategories = mainCategories.map(category => ({
+    ...category,
+    items: category.items.filter(item =>
+      isSimilarMatch(item.name, searchTerm)
+    )
+  })).filter(category => category.items.length > 0 || searchTerm === '')
 
   const getSelectedServicesDetails = () => {
     return selectedServices.map(selected => {
@@ -399,26 +544,6 @@ export default function Home() {
       return { ...service, model: selected.model }
     }).filter(Boolean) as (Service & { model: string })[]
   }
-
-  const getFilteredServices = () => {
-    let filtered = services
-    
-    // Filtrar por categoria
-    if (selectedCategory !== 'Todos') {
-      filtered = filtered.filter(service => service.category === selectedCategory)
-    }
-    
-    // Filtrar por busca
-    if (searchTerm.trim()) {
-      filtered = filtered.filter(service => 
-        service.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-    
-    return filtered
-  }
-
-  const categories = ['Todos', 'Reparos', 'Proteção', 'Acessórios', 'Serviços']
 
   const handleFinish = () => {
     if (selectedServices.length === 0) {
@@ -484,141 +609,32 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      {/* Welcome Screen - New Home Page */}
+      {/* Welcome Screen - Login Page */}
       {currentScreen === 'welcome' && (
-        <>
-        <header className={styles.header}>
-          <div className={styles.logo}>
-            <h1>SPACE PHONE</h1>
-          </div>
-          <p className={styles.subtitle}>Assistência Técnica Especializada</p>
-        </header>
-        
-        <main className={styles.mainHome}>
-          {/* Search Bar */}
-          <div className={styles.searchBarHome}>
-            <input
-              type="text"
-              placeholder="Buscar produtos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.searchInputHome}
-            />
-            <button className={styles.searchButtonHome}>
-              🔍
-            </button>
-          </div>
-
-          {/* Promotions Area */}
-          <div className={styles.promotionArea}>
-            <p className={styles.promotionText}>Espaço para Promoções</p>
-          </div>
-
-          {/* Categories Buttons */}
-          <div className={styles.categoriesContainer}>
-            {categories.map(category => (
-              <button
-                key={category}
-                className={styles.categoryButtonHome}
-                onClick={() => {
-                  setSelectedCategoryForModal(category)
-                  setShowCategoryModal(true)
-                  setSelectedProductsInModal([])
-                }}
+        <div className={styles.welcomeScreen}>
+          <div className={styles.welcomeContent}>
+            <h1 className={styles.welcomeBrand}>SPACE PHONE</h1>
+            <div className={styles.welcomeLogo}>📱</div>
+            
+            <div className={styles.welcomeButtons}>
+              <button 
+                onClick={handleLoginWithPhone}
+                className={styles.loginButton}
               >
-                {category}
+                Login com Telefone
               </button>
-            ))}
-          </div>
-
-          {/* Action Buttons */}
-          <div className={styles.actionButtonsContainer}>
-            <button 
-              onClick={handleLoginWithPhone}
-              className={styles.loginButtonHome}
-            >
-              Login com Telefone
-            </button>
-            <button 
-              onClick={handleGuestAccess}
-              className={styles.guestButtonHome}
-            >
-              Entrar sem Login
-            </button>
-          </div>
-        </main>
-
-        {/* Category Products Modal */}
-        {showCategoryModal && selectedCategoryForModal && (
-          <div className={styles.modalOverlay} onClick={() => setShowCategoryModal(false)}>
-            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-              <div className={styles.modalHeader}>
-                <h2 className={styles.modalTitle}>{selectedCategoryForModal}</h2>
-                <button
-                  className={styles.modalCloseBtn}
-                  onClick={() => setShowCategoryModal(false)}
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className={styles.productsList}>
-                {services
-                  .filter(s => selectedCategoryForModal === 'Todos' || s.category === selectedCategoryForModal)
-                  .filter(s => 
-                    searchTerm === '' || s.name.toLowerCase().includes(searchTerm.toLowerCase())
-                  )
-                  .map(product => (
-                    <div
-                      key={product.id}
-                      className={`${styles.productCard} ${
-                        selectedProductsInModal.includes(product.id) ? styles.selected : ''
-                      }`}
-                      onClick={() => {
-                        if (selectedProductsInModal.includes(product.id)) {
-                          setSelectedProductsInModal(selectedProductsInModal.filter(id => id !== product.id))
-                        } else {
-                          setSelectedProductsInModal([...selectedProductsInModal, product.id])
-                        }
-                      }}
-                    >
-                      <span className={styles.productIcon}>{product.icon}</span>
-                      <h3 className={styles.productName}>{product.name}</h3>
-                      <p className={styles.productPrice}>
-                        {product.price === 0 ? 'GRÁTIS' : `R$ ${product.price.toFixed(2)}`}
-                      </p>
-                      {selectedProductsInModal.includes(product.id) && (
-                        <div className={styles.productCheckmark}>✓</div>
-                      )}
-                    </div>
-                  ))}
-              </div>
-
-              <button
-                className={styles.selectButton}
-                onClick={() => {
-                  const selectedProds = services.filter(s => selectedProductsInModal.includes(s.id))
-                  selectedProds.forEach(prod => {
-                    setSelectedServices([...selectedServices, {
-                      serviceId: prod.id,
-                      model: customerData.deviceModel || 'Não especificado'
-                    }])
-                  })
-                  setShowCategoryModal(false)
-                  setSelectedProductsInModal([])
-                }}
-                disabled={selectedProductsInModal.length === 0}
+              <button 
+                onClick={handleGuestAccess}
+                className={styles.guestButton}
               >
-                Selecionar
+                Entrar sem Login
               </button>
             </div>
           </div>
-        )}
-
-        <footer className={styles.loginFooter}>
-          Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
-        </footer>
-        </>
+          <footer className={styles.loginFooter}>
+            Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
+          </footer>
+        </div>
       )}
 
       {/* Phone Login Screen */}
@@ -752,6 +768,9 @@ export default function Home() {
           </div>
         </main>
       ) : null}
+      <footer className={styles.loginFooter}>
+        Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
+      </footer>
       </>
       )}
       
@@ -807,76 +826,31 @@ export default function Home() {
             </div>
           </div>
         </main>
+        <footer className={styles.loginFooter}>
+          Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
+        </footer>
         </>
       )}
       
       {currentScreen === 'services' && !isFinished && (
-        <>
-        <header className={styles.header}>
-          <div className={styles.logo}>
-            <h1>SPACE PHONE</h1>
-          </div>
-          <p className={styles.subtitle}>Assistência Técnica Especializada</p>
-        </header>
-        
-        {/* Sidebar Toggle Button */}
-        <button 
-          className={styles.sidebarToggle}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          title="Abrir menu de serviços"
-        >
-          ☰
-        </button>
+        <div className={styles.visualServicesContainer}>
+          <header className={styles.visualServicesHeader}>
+            <button 
+              className={styles.backButtonVisual}
+              onClick={handleBackToStart}
+            >
+              ← Voltar
+            </button>
+            <h1 className={styles.visualServicesTitle}>Nossos Serviços</h1>
+            <div className={styles.headerSpacer}></div>
+          </header>
 
-        {/* Sidebar Overlay */}
-        <div 
-          className={`${styles.sidebarOverlay} ${sidebarOpen ? styles.open : ''}`}
-          onClick={() => setSidebarOpen(false)}
-        />
-
-        {/* Sidebar Menu */}
-        <nav className={`${styles.sidebarMenu} ${sidebarOpen ? styles.open : ''}`}>
-          <h2 className={styles.sidebarMenuTitle}>Serviços</h2>
-          <div className={styles.sidebarMenuList}>
-            {getFilteredServices().map(service => (
-              <button
-                key={service.id}
-                className={`${styles.sidebarMenuItem} ${
-                  selectedServices.some(s => s.serviceId === service.id) ? styles.selected : ''
-                }`}
-                onClick={() => {
-                  toggleService(service)
-                  setSidebarOpen(false)
-                }}
-              >
-                <span className={styles.sidebarMenuItemIcon}>{service.icon}</span>
-                <span className={styles.sidebarMenuItemName}>{service.name}</span>
-                <span className={styles.sidebarMenuItemPrice}>
-                  {service.price === 0 ? 'GRÁTIS' : `R$ ${service.price.toFixed(2)}`}
-                </span>
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        <main className={styles.main}>
-        <div className={styles.content}>
-          <section className={styles.servicesSection}>
-            <h2 className={styles.sectionTitle}>Selecione os Serviços</h2>
-            
-            <div className={styles.categoriesBar}>
-              {categories.map(category => (
-                <button
-                  key={category}
-                  className={`${styles.categoryBtn} ${selectedCategory === category ? styles.activeCategory : ''}`}
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  {category}
-                </button>
-              ))}
+          <div className={styles.visualServicesContent}>
+            <div className={styles.servicesHeroSection}>
+              <h2 className={styles.servicesHeroTitle}>Seleção de Serviços</h2>
             </div>
-            
-            <div className={styles.searchContainer}>
+
+            <div className={styles.searchBarContainer}>
               <input
                 type="text"
                 placeholder="🔍 Buscar serviço..."
@@ -886,7 +860,7 @@ export default function Home() {
               />
               {searchTerm && (
                 <button
-                  className={styles.clearSearch}
+                  className={styles.clearSearchBtn}
                   onClick={() => setSearchTerm('')}
                 >
                   ✕
@@ -894,86 +868,133 @@ export default function Home() {
               )}
             </div>
 
-            <div className={styles.servicesGrid}>
-              {getFilteredServices().map(service => (
-                <button
-                  key={service.id}
-                  className={`${styles.serviceCard} ${
-                    selectedServices.some(s => s.serviceId === service.id) ? styles.selected : ''
-                  }`}
-                  onClick={() => toggleService(service)}
-                >
-                  <span className={styles.serviceIcon}>{service.icon}</span>
-                  <h3 className={styles.serviceName}>{service.name}</h3>
-                  <p className={styles.servicePrice}>
-                    {service.price === 0 ? 'GRÁTIS' : `R$ ${service.price.toFixed(2)}`}
-                  </p>
-                  {selectedServices.some(s => s.serviceId === service.id) && (
-                    <div className={styles.checkmark}>✓</div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <aside className={styles.sidebar}>
-            <div className={styles.cart}>
-              <div className={styles.customerInfo}>
-                <h3 className={styles.customerInfoTitle}>Atendimento</h3>
-                <p className={styles.customerInfoItem}><strong>Cliente:</strong> {customerData.name}</p>
-                <p className={styles.customerInfoItem}><strong>Aparelho:</strong> {customerData.deviceModel}</p>
+            {!searchTerm && (
+              <div className={styles.promotionsCarouselContainer}>
+                <div className={styles.promotionsScroll}>
+                  {promotions.map(promo => (
+                    <div key={promo.id} className={styles.promotionCard}>
+                      <div className={styles.promotionImage}>{promo.image}</div>
+                      {promo.discount && (
+                        <div className={styles.promotionDiscount}>{promo.discount}</div>
+                      )}
+                      <h3 className={styles.promotionTitle}>{promo.title}</h3>
+                    </div>
+                  ))}
+                </div>
               </div>
-              
-              <h2 className={styles.cartTitle}>Serviços Selecionados</h2>
-              
-              {selectedServices.length === 0 ? (
-                <p className={styles.emptyCart}>Nenhum serviço selecionado</p>
-              ) : (
-                <>
-                  <div className={styles.cartItems}>
-                    {getSelectedServicesDetails().map((service, index) => (
-                      <div key={`${service.id}-${index}`} className={styles.cartItem}>
-                        <span className={styles.cartItemIcon}>{service.icon}</span>
-                        <div className={styles.cartItemInfo}>
-                          <span className={styles.cartItemName}>{service.name}</span>
-                          <span className={styles.cartItemModel}>{service.model}</span>
-                          <span className={styles.cartItemPrice}>
-                            {service.price === 0 ? 'Grátis' : `R$ ${service.price.toFixed(2)}`}
-                          </span>
-                        </div>
-                        <button
-                          className={styles.removeBtn}
-                          onClick={() => removeService(index)}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className={styles.total}>
-                    <span>Total:</span>
-                    <span className={styles.totalValue}>R$ {getTotal().toFixed(2)}</span>
-                  </div>
-                </>
-              )}
+            )}
 
-              <button
-                className={styles.finishBtn}
-                onClick={handleFinish}
-                disabled={selectedServices.length === 0}
-              >
-                Finalizar Atendimento
-              </button>
+            <div className={styles.servicesGridContainer}>
+              <div className={styles.mainServicesArea}>
+                <div className={styles.categoriesButtonsContainer}>
+                  {filteredCategories.map(category => (
+                    <div key={category.id} className={styles.categorySection}>
+                      <button
+                        className={styles.mainCategoryButton}
+                        onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
+                        style={{
+                          borderLeftColor: category.color,
+                          backgroundColor: expandedCategory === category.id ? 'rgba(0, 217, 163, 0.05)' : '#ffffff'
+                        }}
+                      >
+                        <span className={styles.categoryIcon}>{category.icon}</span>
+                        <span className={styles.categoryTitle}>{category.name}</span>
+                        <span className={styles.expandIcon}>{expandedCategory === category.id ? '▼' : '▶'}</span>
+                      </button>
+
+                      {expandedCategory === category.id && (
+                        <div className={styles.categoryItemsContainer}>
+                          {category.items.map(item => (
+                            <button
+                              key={item.id}
+                              className={`${styles.categoryItemButton} ${
+                                selectedServices.some(s => s.serviceId === item.id) ? styles.selected : ''
+                              }`}
+                              onClick={() => {
+                                const serviceItem: Service = {
+                                  id: item.id,
+                                  name: item.name,
+                                  price: item.price,
+                                  icon: item.icon,
+                                  category: category.name
+                                }
+                                toggleService(serviceItem)
+                              }}
+                            >
+                              <span className={styles.itemIcon}>{item.icon}</span>
+                              <div className={styles.itemInfo}>
+                                <h4>{item.name}</h4>
+                                <p>{item.price === 0 ? 'GRÁTIS' : `R$ ${item.price.toFixed(2)}`}</p>
+                              </div>
+                              {selectedServices.some(s => s.serviceId === item.id) && (
+                                <div className={styles.itemCheckmark}>✓</div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <aside className={styles.cartSidebar}>
+                <div className={styles.cart}>
+                  <h2 className={styles.cartTitle}>Resumo do Atendimento</h2>
+                  
+                  {selectedServices.length === 0 ? (
+                    <p className={styles.emptyCart}>Nenhum serviço selecionado</p>
+                  ) : (
+                    <>
+                      <div className={styles.cartItems}>
+                        {getSelectedServicesDetails().map((service, index) => (
+                          <div key={`${service.id}-${index}`} className={styles.cartItem}>
+                            <span className={styles.cartItemIcon}>{service.icon}</span>
+                            <div className={styles.cartItemInfo}>
+                              <span className={styles.cartItemName}>{service.name}</span>
+                              <span className={styles.cartItemPrice}>
+                                {service.price === 0 ? 'Grátis' : `R$ ${service.price.toFixed(2)}`}
+                              </span>
+                            </div>
+                            <button
+                              className={styles.removeBtn}
+                              onClick={() => removeService(index)}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className={styles.total}>
+                        <span>Total:</span>
+                        <span className={styles.totalValue}>R$ {getTotal().toFixed(2)}</span>
+                      </div>
+                    </>
+                  )}
+
+                  <button
+                    className={styles.finishBtn}
+                    onClick={handleFinish}
+                    disabled={selectedServices.length === 0}
+                  >
+                    Finalizar Atendimento
+                  </button>
+                </div>
+              </aside>
             </div>
-          </aside>
+          </div>
+
+          <footer className={styles.servicesFooter}>
+            <div className={styles.attendanceInfoSmall}>
+              <span className={styles.attendanceLabel}>Cliente:</span>
+              <span className={styles.attendanceValue}>{customerData.name}</span>
+              <span className={styles.attendanceLabel}>Aparelho:</span>
+              <span className={styles.attendanceValue}>{customerData.deviceModel}</span>
+            </div>
+            <p className={styles.footerText}>Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.</p>
+          </footer>
         </div>
-        
-      <footer className={styles.footer}>
-        <p>Toque nos serviços desejados • Atendimento rápido e profissional</p>
-      </footer>
-      </main>
-      </>
       )}
       
       {/* Modal de Opções de Produtos */}
