@@ -256,6 +256,7 @@ export default function Home() {
   const [showCategoryModal, setShowCategoryModal] = useState(false)
   const [selectedCategoryForModal, setSelectedCategoryForModal] = useState<string | null>(null)
   const [selectedProductsInModal, setSelectedProductsInModal] = useState<number[]>([])
+  const [showCartModal, setShowCartModal] = useState(false)
   
   // Customer registration states
   const [isRegistered, setIsRegistered] = useState(false)
@@ -673,8 +674,8 @@ export default function Home() {
       )}
 
       {currentScreen === 'register' && (
-      <>
-      <header className={styles.header}>
+        <>
+        <header className={styles.header}>
         <div className={styles.logo}>
           <h1>SPACE PHONE</h1>
         </div>
@@ -853,7 +854,7 @@ export default function Home() {
             <div className={styles.searchBarContainer}>
               <input
                 type="text"
-                placeholder="🔍 Buscar serviço..."
+                placeholder="Procure na Space Phone"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
@@ -866,6 +867,15 @@ export default function Home() {
                   ✕
                 </button>
               )}
+            </div>
+
+            <div className={styles.actionButtonsContainer}>
+              <button className={styles.actionButton} title="Adicionar aos favoritos">
+                ❤️
+              </button>
+              <button className={styles.actionButton} onClick={() => setShowCartModal(true)} title="Ver resumo do atendimento">
+                🛒
+              </button>
             </div>
 
             {!searchTerm && (
@@ -947,7 +957,7 @@ export default function Home() {
                   ) : (
                     <>
                       <div className={styles.cartItems}>
-                        {getSelectedServicesDetails().map((service, index) => (
+                        {getSelectedServicesDetails().filter(Boolean).map((service, index) => (
                           <div key={`${service.id}-${index}`} className={styles.cartItem}>
                             <span className={styles.cartItemIcon}>{service.icon}</span>
                             <div className={styles.cartItemInfo}>
@@ -1028,6 +1038,64 @@ export default function Home() {
           </div>
         </div>
       )}
-    </div>
+
+      {/* Modal do Carrinho - Resumo do Atendimento */}
+      {showCartModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowCartModal(false)}>
+          <div className={styles.cartModalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Resumo do Atendimento</h2>
+              <button 
+                className={styles.closeModal}
+                onClick={() => setShowCartModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+            
+            {selectedServices.length === 0 ? (
+              <p className={styles.emptyCartModal}>Nenhum serviço selecionado</p>
+            ) : (
+              <>
+                <div className={styles.cartModalItems}>
+                  {getSelectedServicesDetails().filter(Boolean).map((service, index) => (
+                    <div key={`${service.id}-${index}`} className={styles.cartModalItem}>
+                      <span className={styles.cartModalIcon}>{service.icon}</span>
+                      <div className={styles.cartModalInfo}>
+                        <span className={styles.cartModalName}>{service.name}</span>
+                        <span className={styles.cartModalPrice}>
+                          {service.price === 0 ? 'Grátis' : `R$ ${service.price.toFixed(2)}`}
+                        </span>
+                      </div>
+                      <button
+                        className={styles.removeModalBtn}
+                        onClick={() => removeService(index)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className={styles.cartModalTotal}>
+                  <span>Total:</span>
+                  <span className={styles.cartModalTotalValue}>R$ {getTotal().toFixed(2)}</span>
+                </div>
+                
+                <button
+                  className={styles.cartModalFinishBtn}
+                  onClick={() => {
+                    handleFinish()
+                    setShowCartModal(false)
+                  }}
+                  disabled={selectedServices.length === 0}
+                >
+                  Finalizar Atendimento
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}    </div>
   )
 }
