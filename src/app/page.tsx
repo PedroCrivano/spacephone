@@ -44,36 +44,70 @@ interface SavedCustomer {
 }
 
 const phoneModels = [
-  'iPhone 17 Pro Max',
-  'iPhone 17 Pro',
-  'iPhone 17 Air',
-  'iPhone 17',
-  'iPhone 16 Pro Max',
-  'iPhone 16 Pro',
-  'iPhone 16 Plus',
-  'iPhone 16',
-  'iPhone 15 Pro Max',
-  'iPhone 15 Pro',
-  'iPhone 15 Plus',
-  'iPhone 15',
-  'iPhone 14 Pro Max',
-  'iPhone 14 Pro',
-  'iPhone 14 Plus',
-  'iPhone 14',
-  'iPhone 13 Pro Max',
-  'iPhone 13 Pro',
-  'iPhone 13',
-  'iPhone 13 mini',
-  'iPhone 12 Pro Max',
-  'iPhone 12 Pro',
-  'iPhone 12',
-  'iPhone 12 mini',
-  'Samsung Galaxy S24 Ultra',
-  'Samsung Galaxy S24',
-  'Samsung Galaxy S23',
-  'Samsung Galaxy A54',
-  'Xiaomi 13 Pro',
-  'Motorola Edge 40',
+  // iPhone - Todos os modelos
+  'iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17 Air', 'iPhone 17',
+  'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16',
+  'iPhone 15 Pro Max', 'iPhone 15 Pro', 'iPhone 15 Plus', 'iPhone 15',
+  'iPhone 14 Pro Max', 'iPhone 14 Pro', 'iPhone 14 Plus', 'iPhone 14',
+  'iPhone 13 Pro Max', 'iPhone 13 Pro', 'iPhone 13', 'iPhone 13 mini',
+  'iPhone 12 Pro Max', 'iPhone 12 Pro', 'iPhone 12', 'iPhone 12 mini',
+  'iPhone 11 Pro Max', 'iPhone 11 Pro', 'iPhone 11',
+  'iPhone XS Max', 'iPhone XS', 'iPhone XR', 'iPhone X',
+  'iPhone 8 Plus', 'iPhone 8', 'iPhone 7 Plus', 'iPhone 7',
+  'iPhone 6s Plus', 'iPhone 6s', 'iPhone 6 Plus', 'iPhone 6',
+  'iPhone SE (2022)', 'iPhone SE (2020)', 'iPhone SE',
+  
+  // Samsung Galaxy S (Todos)
+  'Samsung Galaxy S24 Ultra', 'Samsung Galaxy S24+', 'Samsung Galaxy S24',
+  'Samsung Galaxy S23 Ultra', 'Samsung Galaxy S23+', 'Samsung Galaxy S23', 'Samsung Galaxy S23 FE',
+  'Samsung Galaxy S22 Ultra', 'Samsung Galaxy S22+', 'Samsung Galaxy S22',
+  'Samsung Galaxy S21 Ultra', 'Samsung Galaxy S21+', 'Samsung Galaxy S21', 'Samsung Galaxy S21 FE',
+  'Samsung Galaxy S20 Ultra', 'Samsung Galaxy S20+', 'Samsung Galaxy S20', 'Samsung Galaxy S20 FE',
+  'Samsung Galaxy S10+', 'Samsung Galaxy S10', 'Samsung Galaxy S10e', 'Samsung Galaxy S10 5G',
+  'Samsung Galaxy S9+', 'Samsung Galaxy S9',
+  'Samsung Galaxy S8+', 'Samsung Galaxy S8',
+  'Samsung Galaxy S7 Edge', 'Samsung Galaxy S7',
+  
+  // Samsung Galaxy A (Todos)
+  'Samsung Galaxy A54', 'Samsung Galaxy A53', 'Samsung Galaxy A52', 'Samsung Galaxy A51', 'Samsung Galaxy A50',
+  'Samsung Galaxy A34', 'Samsung Galaxy A33', 'Samsung Galaxy A32', 'Samsung Galaxy A31', 'Samsung Galaxy A30',
+  'Samsung Galaxy A24', 'Samsung Galaxy A23', 'Samsung Galaxy A22', 'Samsung Galaxy A21s', 'Samsung Galaxy A20',
+  'Samsung Galaxy A14', 'Samsung Galaxy A13', 'Samsung Galaxy A12', 'Samsung Galaxy A11', 'Samsung Galaxy A10',
+  'Samsung Galaxy A73', 'Samsung Galaxy A72', 'Samsung Galaxy A71', 'Samsung Galaxy A70',
+  'Samsung Galaxy A04', 'Samsung Galaxy A03', 'Samsung Galaxy A02',
+  
+  // Samsung Galaxy J (Todos)
+  'Samsung Galaxy J8', 'Samsung Galaxy J7 Prime', 'Samsung Galaxy J7 Pro', 'Samsung Galaxy J7', 'Samsung Galaxy J7 Neo',
+  'Samsung Galaxy J6', 'Samsung Galaxy J5 Prime', 'Samsung Galaxy J5 Pro', 'Samsung Galaxy J5',
+  'Samsung Galaxy J4', 'Samsung Galaxy J3', 'Samsung Galaxy J2 Prime', 'Samsung Galaxy J2', 'Samsung Galaxy J1',
+  
+  // Xiaomi (Todos os principais)
+  'Xiaomi 14 Ultra', 'Xiaomi 14 Pro', 'Xiaomi 14',
+  'Xiaomi 13 Ultra', 'Xiaomi 13 Pro', 'Xiaomi 13', 'Xiaomi 13 Lite',
+  'Xiaomi 12 Pro', 'Xiaomi 12', 'Xiaomi 12 Lite', 'Xiaomi 12X',
+  'Xiaomi 11 Ultra', 'Xiaomi 11 Pro', 'Xiaomi 11', 'Xiaomi 11 Lite',
+  'Xiaomi Mi 10 Ultra', 'Xiaomi Mi 10 Pro', 'Xiaomi Mi 10', 'Xiaomi Mi 10 Lite',
+  'Xiaomi Mi 9', 'Xiaomi Mi 9 SE', 'Xiaomi Mi 8', 'Xiaomi Mi A3', 'Xiaomi Mi A2',
+  'Redmi Note 13 Pro+', 'Redmi Note 13 Pro', 'Redmi Note 13',
+  'Redmi Note 12 Pro+', 'Redmi Note 12 Pro', 'Redmi Note 12',
+  'Redmi Note 11 Pro', 'Redmi Note 11', 'Redmi Note 11S',
+  'Redmi Note 10 Pro', 'Redmi Note 10', 'Redmi Note 10S',
+  'Redmi Note 9 Pro', 'Redmi Note 9', 'Redmi Note 9S',
+  'Redmi Note 8 Pro', 'Redmi Note 8', 'Redmi Note 7',
+  'Redmi 13C', 'Redmi 12C', 'Redmi 10', 'Redmi 9', 'Redmi 9A', 'Redmi 9C',
+  'POCO F5 Pro', 'POCO F5', 'POCO F4', 'POCO F3', 'POCO X6 Pro', 'POCO X5 Pro', 'POCO X4 Pro',
+  
+  // Motorola (Todos os principais)
+  'Motorola Edge 50 Pro', 'Motorola Edge 50', 'Motorola Edge 40 Pro', 'Motorola Edge 40', 'Motorola Edge 30 Ultra',
+  'Motorola Edge 30 Pro', 'Motorola Edge 30', 'Motorola Edge 20 Pro', 'Motorola Edge 20',
+  'Moto G84', 'Moto G73', 'Moto G72', 'Moto G71', 'Moto G60', 'Moto G54', 'Moto G53', 'Moto G52',
+  'Moto G51', 'Moto G50', 'Moto G42', 'Moto G41', 'Moto G40', 'Moto G32', 'Moto G31', 'Moto G30',
+  'Moto G24', 'Moto G23', 'Moto G22', 'Moto G20', 'Moto G14', 'Moto G13', 'Moto G10',
+  'Moto G200', 'Moto G100', 'Moto G9 Plus', 'Moto G9 Play', 'Moto G8 Power', 'Moto G8 Plus', 'Moto G8',
+  'Moto E40', 'Moto E32', 'Moto E30', 'Moto E22', 'Moto E20', 'Moto E13', 'Moto E7 Plus', 'Moto E7',
+  'Motorola Razr 40 Ultra', 'Motorola Razr 40', 'Motorola Razr 2022',
+  'Motorola One Fusion', 'Motorola One Vision', 'Motorola One Action',
+  
   'Outro modelo'
 ]
 
@@ -249,6 +283,7 @@ export default function Home() {
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [modelSearchTerm, setModelSearchTerm] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [currentService, setCurrentService] = useState<Service | null>(null)
   const [showProductOptions, setShowProductOptions] = useState(false)
@@ -262,6 +297,10 @@ export default function Home() {
   const [isRegistered, setIsRegistered] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
   const [additionalNotes, setAdditionalNotes] = useState('')
+  const [rating, setRating] = useState(0)
+  const [ratingComment, setRatingComment] = useState('')
+  const [ratingSubmitted, setRatingSubmitted] = useState(false)
+  const [showNumericKeypad, setShowNumericKeypad] = useState(false)
   const [customerData, setCustomerData] = useState<CustomerData>({
     id: '',
     name: '',
@@ -320,8 +359,20 @@ export default function Home() {
     setFormCpf(formatted)
   }
 
+  const handleNumericKeypadPress = (digit: string) => {
+    const currentNumbers = formPhone.replace(/\D/g, '')
+    if (digit === 'backspace') {
+      const newNumbers = currentNumbers.slice(0, -1)
+      setFormPhone(formatPhoneNumber(newNumbers))
+    } else if (currentNumbers.length < 11) {
+      const newNumbers = currentNumbers + digit
+      setFormPhone(formatPhoneNumber(newNumbers))
+    }
+  }
+
   const handleLoginWithPhone = () => {
     setCurrentScreen('phone-login')
+    setShowNumericKeypad(true)
   }
 
   const handleGuestAccess = () => {
@@ -586,11 +637,35 @@ export default function Home() {
     })
   }
 
+  const handleSubmitRating = () => {
+    // Salvar avaliação no localStorage
+    try {
+      const ratingData = {
+        customerName: customerData.name,
+        rating: rating,
+        comment: ratingComment,
+        timestamp: new Date().toISOString()
+      }
+      
+      const existingRatings = localStorage.getItem('spacephone_ratings')
+      const ratings = existingRatings ? JSON.parse(existingRatings) : []
+      ratings.push(ratingData)
+      localStorage.setItem('spacephone_ratings', JSON.stringify(ratings))
+      
+      setRatingSubmitted(true)
+    } catch (error) {
+      console.error('Erro ao salvar avaliação:', error)
+    }
+  }
+
   const handleBackToStart = () => {
     setIsFinished(false)
     setIsRegistered(false)
     setSelectedServices([])
     setAdditionalNotes('')
+    setRating(0)
+    setRatingComment('')
+    setRatingSubmitted(false)
     setFormName('')
     setFormPhone('')
     setFormCpf('')
@@ -614,21 +689,26 @@ export default function Home() {
       {currentScreen === 'welcome' && (
         <div className={styles.welcomeScreen}>
           <div className={styles.welcomeContent}>
-            <h1 className={styles.welcomeBrand}>SPACE PHONE</h1>
-            <div className={styles.welcomeLogo}>📱</div>
+            <div className={styles.welcomeHeader}>
+              <div className={styles.welcomePromoBox}>
+                <p className={styles.welcomePromoMain}>ATENDIMENTO VIRTUAL</p>
+                <p className={styles.welcomePromoDiscount}>DESCONTO!!!</p>
+              </div>
+              <div className={styles.welcomeLogoCircle}>logo</div>
+            </div>
             
-            <div className={styles.welcomeButtons}>
+            <div className={styles.welcomeButtonsClean}>
               <button 
                 onClick={handleLoginWithPhone}
-                className={styles.loginButton}
+                className={styles.loginButtonClean}
               >
                 Login com Telefone
               </button>
               <button 
                 onClick={handleGuestAccess}
-                className={styles.guestButton}
+                className={styles.guestButtonClean}
               >
-                Entrar sem Login
+                Continuar como Convidado
               </button>
             </div>
           </div>
@@ -650,8 +730,10 @@ export default function Home() {
                 type="tel"
                 value={formPhone}
                 onChange={handlePhoneChange}
+                onFocus={() => setShowNumericKeypad(true)}
                 placeholder="(00) 00000-0000"
                 className={styles.phoneLoginInput}
+                readOnly
               />
               <button 
                 onClick={handlePhoneLogin}
@@ -660,7 +742,10 @@ export default function Home() {
                 Continuar
               </button>
               <button 
-                onClick={() => setCurrentScreen('welcome')}
+                onClick={() => {
+                  setCurrentScreen('welcome')
+                  setShowNumericKeypad(false)
+                }}
                 className={styles.backButtonSimple}
               >
                 Voltar
@@ -670,6 +755,55 @@ export default function Home() {
           <footer className={styles.loginFooter}>
             Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
           </footer>
+        </div>
+      )}
+
+      {/* Numeric Keypad Modal */}
+      {showNumericKeypad && (
+        <div className={styles.keypadOverlay}>
+          <div className={styles.keypadCard}>
+            <button 
+              className={styles.keypadClose}
+              onClick={() => setShowNumericKeypad(false)}
+            >
+              ✕
+            </button>
+            <div className={styles.keypadDisplay}>
+              {formPhone || '(00) 00000-0000'}
+            </div>
+            <div className={styles.keypadGrid}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                <button 
+                  key={num}
+                  className={styles.keypadButton}
+                  onClick={() => handleNumericKeypadPress(num.toString())}
+                >
+                  {num}
+                </button>
+              ))}
+              <button 
+                className={`${styles.keypadButton} ${styles.keypadButtonDelete}`}
+                onClick={() => handleNumericKeypadPress('backspace')}
+              >
+                ⌫
+              </button>
+              <button 
+                className={styles.keypadButton}
+                onClick={() => handleNumericKeypadPress('0')}
+              >
+                0
+              </button>
+              <button 
+                className={`${styles.keypadButton} ${styles.keypadButtonConfirm}`}
+                onClick={() => {
+                  handlePhoneLogin()
+                  setShowNumericKeypad(false)
+                }}
+              >
+                ✓
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -740,17 +874,57 @@ export default function Home() {
                 <label htmlFor="device-model" className={styles.formLabel}>
                   Modelo do Aparelho
                 </label>
-                <select
-                  id="device-model"
-                  value={formDeviceModel}
-                  onChange={(e) => setFormDeviceModel(e.target.value)}
-                  className={styles.formSelect}
-                >
-                  <option value="">Selecione o modelo</option>
-                  {phoneModels.map(model => (
-                    <option key={model} value={model}>{model}</option>
-                  ))}
-                </select>
+                {!formDeviceModel ? (
+                  <>
+                    <input
+                      type="text"
+                      value={modelSearchTerm}
+                      onChange={(e) => setModelSearchTerm(e.target.value)}
+                      placeholder="Digite para pesquisar o modelo..."
+                      className={styles.formInput}
+                    />
+                    {modelSearchTerm && (
+                      <div className={styles.modelDropdown}>
+                        {phoneModels
+                          .filter(model => 
+                            model.toLowerCase().includes(modelSearchTerm.toLowerCase())
+                          )
+                          .slice(0, 10)
+                          .map(model => (
+                            <div
+                              key={model}
+                              className={styles.modelOption}
+                              onClick={() => {
+                                setFormDeviceModel(model)
+                                setModelSearchTerm('')
+                              }}
+                            >
+                              {model}
+                            </div>
+                          ))}
+                        {phoneModels.filter(model => 
+                          model.toLowerCase().includes(modelSearchTerm.toLowerCase())
+                        ).length === 0 && (
+                          <div className={styles.modelNoResults}>Nenhum modelo encontrado</div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.selectedModel}>
+                    <span>{formDeviceModel}</span>
+                    <button
+                      type="button"
+                      className={styles.clearModelBtn}
+                      onClick={() => {
+                        setFormDeviceModel('')
+                        setModelSearchTerm('')
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
               </div>
 
               <button 
@@ -787,37 +961,75 @@ export default function Home() {
           <div className={styles.thankYouContainer}>
             <div className={styles.thankYouCard}>
               <div className={styles.thankYouIcon}>✅</div>
-              <h2 className={styles.thankYouTitle}>Obrigado pela Preferência!</h2>
+              <h2 className={styles.thankYouTitle}>Obrigado por escolher a Space Phone</h2>
+              <p className={styles.thankYouSubtitle}>Nossa equipe está pronta para lhe atender com qualidade e rapidez</p>
               
-              <div className={styles.thankYouMessage}>
-                <p>Seu pedido já foi encaminhado para nossos técnicos.</p>
-                <p><strong>Dirija-se a um deles para entregar seu dispositivo.</strong></p>
-                {isGuestMode && (
-                  <p className={styles.guestWarning}>⚠️ Atendimento sem identificação - Não será possível consultar posteriormente</p>
-                )}
-              </div>
-
               <div className={styles.orderSummary}>
                 <h3>Resumo do Pedido</h3>
                 <p><strong>Cliente:</strong> {customerData.name}</p>
                 <p><strong>Aparelho:</strong> {customerData.deviceModel}</p>
-                <p><strong>Total:</strong> <span className={styles.totalHighlight}>R$ {getTotal().toFixed(2)}</span></p>
+                <div className={styles.orderServices}>
+                  <strong>Serviços:</strong>
+                  <ul>
+                    {getSelectedServicesDetails().filter(Boolean).map((service, index) => (
+                      <li key={index}>
+                        {service.icon} {service.name} - {service.price === 0 ? 'Grátis' : `R$ ${service.price.toFixed(2)}`}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p className={styles.orderTotal}><strong>Total:</strong> <span className={styles.totalHighlight}>R$ {getTotal().toFixed(2)}</span></p>
               </div>
-
-              <div className={styles.notesSection}>
-                <label htmlFor="additional-notes" className={styles.notesLabel}>
-                  Caso tenha alguma informação para acrescentar, escreva no espaço abaixo:
-                </label>
-                <textarea
-                  id="additional-notes"
-                  value={additionalNotes}
-                  onChange={(e) => setAdditionalNotes(e.target.value)}
-                  placeholder="Notas adicionais (opcional)..."
-                  className={styles.notesTextarea}
-                  rows={5}
-                />
+              
+              <div className={styles.ratingSection}>
+                {!ratingSubmitted ? (
+                  <>
+                    <h3 className={styles.ratingTitle}>Avalie nosso atendimento</h3>
+                    <div className={styles.starsContainer}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          className={styles.starButton}
+                          onClick={() => setRating(star)}
+                        >
+                          <span className={`${styles.star} ${star <= rating ? styles.starSelected : styles.starUnselected}`}>
+                            ★
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    
+                    <div className={styles.ratingCommentSection}>
+                      <label htmlFor="rating-comment" className={styles.ratingCommentLabel}>
+                        Observações (opcional)
+                      </label>
+                      <textarea
+                        id="rating-comment"
+                        value={ratingComment}
+                        onChange={(e) => setRatingComment(e.target.value)}
+                        placeholder="Deixe seu comentário..."
+                        className={styles.ratingCommentTextarea}
+                        rows={4}
+                      />
+                    </div>
+                    
+                    <button 
+                      onClick={handleSubmitRating}
+                      className={styles.submitRatingButton}
+                      disabled={rating === 0}
+                    >
+                      Enviar Avaliação
+                    </button>
+                  </>
+                ) : (
+                  <div className={styles.ratingThanks}>
+                    <div className={styles.ratingThanksIcon}>✓</div>
+                    <h3 className={styles.ratingThanksTitle}>Obrigado pela avaliação!</h3>
+                    <p className={styles.ratingThanksText}>Seu feedback é muito importante para a construção da nossa empresa</p>
+                  </div>
+                )}
               </div>
-
+              
               <button 
                 onClick={handleBackToStart}
                 className={styles.backToStartButton}
@@ -840,7 +1052,7 @@ export default function Home() {
               className={styles.backButtonVisual}
               onClick={handleBackToStart}
             >
-              ← Voltar
+              ←
             </button>
             <h1 className={styles.visualServicesTitle}>Nossos Serviços</h1>
             <div className={styles.headerSpacer}></div>
