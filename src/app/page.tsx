@@ -292,6 +292,12 @@ export default function Home() {
   const [selectedCategoryForModal, setSelectedCategoryForModal] = useState<string | null>(null)
   const [selectedProductsInModal, setSelectedProductsInModal] = useState<number[]>([])
   const [showCartModal, setShowCartModal] = useState(false)
+  const [showVirtualKeyboard, setShowVirtualKeyboard] = useState(false)
+  const [activeInputField, setActiveInputField] = useState<string | null>(null)
+  const [keyboardInputValue, setKeyboardInputValue] = useState('')
+  const [showGuestRegistrationModal, setShowGuestRegistrationModal] = useState(false)
+  const [showGuestDeviceModal, setShowGuestDeviceModal] = useState(false)
+  const [pendingCategoryId, setPendingCategoryId] = useState<string | null>(null)
   
   // Customer registration states
   const [isRegistered, setIsRegistered] = useState(false)
@@ -370,6 +376,82 @@ export default function Home() {
     }
   }
 
+  const handleVirtualKeyPress = (key: string) => {
+    if (key === 'backspace') {
+      setKeyboardInputValue(prev => prev.slice(0, -1))
+    } else if (key === 'space') {
+      setKeyboardInputValue(prev => prev + ' ')
+    } else if (key === 'enter') {
+      handleVirtualKeyboardConfirm()
+    } else if (key === 'clear') {
+      setKeyboardInputValue('')
+    } else {
+      setKeyboardInputValue(prev => prev + key)
+    }
+  }
+
+  const handleVirtualKeyboardConfirm = () => {
+    if (activeInputField === 'name') {
+      setFormName(keyboardInputValue)
+    } else if (activeInputField === 'cpf') {
+      setFormCpf(keyboardInputValue)
+    } else if (activeInputField === 'search') {
+      setSearchTerm(keyboardInputValue)
+    } else if (activeInputField === 'modelSearch') {
+      setModelSearchTerm(keyboardInputValue)
+    } else if (activeInputField === 'notes') {
+      setAdditionalNotes(keyboardInputValue)
+    }
+    setShowVirtualKeyboard(false)
+    setActiveInputField(null)
+    setKeyboardInputValue('')
+  }
+
+  const closeVirtualKeyboard = () => {
+    setShowVirtualKeyboard(false)
+    setActiveInputField(null)
+    setKeyboardInputValue('')
+  }
+
+  const openVirtualKeyboard = (field: string, currentValue: string) => {
+    setActiveInputField(field)
+    setKeyboardInputValue(currentValue)
+    setShowVirtualKeyboard(true)
+  }
+
+  const handleCategoryClick = (categoryId: string) => {
+    // Se for convidado e não tiver modelo definido, mostrar modal
+    if (isGuestMode && !customerData.deviceModel) {
+      setPendingCategoryId(categoryId)
+      setShowGuestDeviceModal(true)
+      return
+    }
+    
+    // Caso contrário, expandir normalmente
+    setExpandedCategory(expandedCategory === categoryId ? null : categoryId)
+  }
+
+  const handleGuestDeviceSelect = () => {
+    if (!formDeviceModel) {
+      alert('Por favor, selecione um modelo de aparelho!')
+      return
+    }
+    
+    // Atualizar dados do cliente com o modelo
+    const updatedCustomerData = {
+      ...customerData,
+      deviceModel: formDeviceModel
+    }
+    setCustomerData(updatedCustomerData)
+    
+    // Fechar modal e expandir a categoria
+    setShowGuestDeviceModal(false)
+    if (pendingCategoryId) {
+      setExpandedCategory(pendingCategoryId)
+      setPendingCategoryId(null)
+    }
+  }
+
   const handleLoginWithPhone = () => {
     setCurrentScreen('phone-login')
     setShowNumericKeypad(true)
@@ -377,7 +459,19 @@ export default function Home() {
 
   const handleGuestAccess = () => {
     setIsGuestMode(true)
-    setCurrentScreen('register')
+    
+    // Criar dados temporários do cliente convidado
+    const guestData = {
+      id: Date.now().toString(),
+      name: 'Convidado',
+      phone: '',
+      cpf: '',
+      deviceModel: '',
+      timestamp: new Date().toISOString()
+    }
+    setCustomerData(guestData)
+    setIsRegistered(true)
+    setCurrentScreen('services')
   }
 
   const handlePhoneLogin = () => {
@@ -603,6 +697,12 @@ export default function Home() {
       return
     }
     
+    // Se for modo convidado, sempre mostrar modal de registro para confirmar dados
+    if (isGuestMode) {
+      setShowGuestRegistrationModal(true)
+      return
+    }
+    
     // Save order to localStorage
     const orderData = {
       id: customerData.id,
@@ -634,6 +734,80 @@ export default function Home() {
       services: getSelectedServicesDetails(),
       total: getTotal(),
       notes: additionalNotes
+    })
+  }
+
+  const handleGuestRegistrationSubmit = () => {
+    // Validar campos
+    if (!formName.trim() || !formPhone.trim() || !formCpf.trim() || !formDeviceModel) {
+      alert('Por favor, preencha todos os campos obrigatórios!')
+      return
+    }
+
+    // Atualizar dados do cliente IMEDIATAMENTE
+    const updatedCustomerData = {
+      id: customerData.id || Date.now().toString(),
+      name: formName,
+      phone: formPhone,
+      cpf: formCpf,
+      deviceModel: formDeviceModel,
+      timestamp: customerData.timestamp || new Date().toISOString()
+    }
+    
+    // Salvar pedido
+    const orderData = {
+      id: updatedCustomerData.id,
+      customerName: formName,
+      customerPhone: formPhone,
+      deviceModel: formDeviceModel,
+      services: getSelectedServicesDetails().map(s => ({
+        name: s.name,
+        price: s.price
+      })),
+      totalValue: getTotal(),
+      additionalNotes: additionalNotes,
+      createdAt: updatedCustomerData.timestamp,
+      status: 'pending' as 'pending'
+    }
+    
+    try {
+      const existingOrders = localStorage.getItem('spacephone_orders')
+      const orders = existingOrders ? JSON.parse(existingOrders) : []
+      orders.push(orderData)
+      localStorage.setItem('spacephone_orders', JSON.stringify(orders))
+    } catch (error) {
+      console.error('Erro ao salvar pedido:', error)
+    }
+
+    // Salvar cliente no localStorage (sempre, não apenas com CPF)
+    try {
+      const existingCustomers = localStorage.getItem('spacephone_customers')
+      const customers = existingCustomers ? JSON.parse(existingCustomers) : []
+      customers.push({
+        phone: formPhone,
+        name: formName,
+        cpf: formCpf || '',
+        lastDeviceModel: formDeviceModel
+      })
+      localStorage.setItem('spacephone_customers', JSON.stringify(customers))
+    } catch (error) {
+      console.error('Erro ao salvar cliente:', error)
+    }
+
+    // Atualizar todos os estados na ordem correta
+    setCustomerData(updatedCustomerData)
+    setIsGuestMode(false) // Agora é um usuário registrado
+    setIsRegistered(true) // Garantir que está registrado
+    setCurrentScreen('services') // Garantir que está na tela de serviços
+    setShowGuestRegistrationModal(false)
+    setShowCartModal(false)
+    setIsFinished(true)
+    
+    console.log('Convidado registrado com sucesso:', {
+      customerData: updatedCustomerData,
+      isFinished: true,
+      currentScreen: 'services',
+      isRegistered: true
     })
   }
 
@@ -833,7 +1007,8 @@ export default function Home() {
                   id="customer-name"
                   type="text"
                   value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
+                  onFocus={() => openVirtualKeyboard('name', formName)}
+                  readOnly
                   placeholder="Digite seu nome"
                   className={styles.formInput}
                 />
@@ -863,7 +1038,8 @@ export default function Home() {
                     id="customer-cpf"
                     type="text"
                     value={formCpf}
-                    onChange={handleCpfChange}
+                    onFocus={() => openVirtualKeyboard('cpf', formCpf)}
+                    readOnly
                     placeholder="000.000.000-00"
                     className={styles.formInput}
                   />
@@ -879,7 +1055,8 @@ export default function Home() {
                     <input
                       type="text"
                       value={modelSearchTerm}
-                      onChange={(e) => setModelSearchTerm(e.target.value)}
+                      onFocus={() => openVirtualKeyboard('modelSearch', modelSearchTerm)}
+                      readOnly
                       placeholder="Digite para pesquisar o modelo..."
                       className={styles.formInput}
                     />
@@ -1068,7 +1245,8 @@ export default function Home() {
                 type="text"
                 placeholder="Procure na Space Phone"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => openVirtualKeyboard('search', searchTerm)}
+                readOnly
                 className={styles.searchInput}
               />
               {searchTerm && (
@@ -1113,7 +1291,7 @@ export default function Home() {
                     <div key={category.id} className={styles.categorySection}>
                       <button
                         className={styles.mainCategoryButton}
-                        onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
+                        onClick={() => handleCategoryClick(category.id)}
                         style={{
                           borderLeftColor: category.color,
                           backgroundColor: expandedCategory === category.id ? 'rgba(0, 217, 163, 0.05)' : '#ffffff'
@@ -1308,6 +1486,261 @@ export default function Home() {
             )}
           </div>
         </div>
-      )}    </div>
+      )}
+
+      {/* Teclado Virtual */}
+      {showVirtualKeyboard && (
+        <div className={styles.keyboardOverlay} onClick={closeVirtualKeyboard}>
+          <div className={styles.keyboardContainer} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.keyboardHeader}>
+              <div className={styles.keyboardDisplay}>{keyboardInputValue}</div>
+              <button className={styles.keyboardCloseBtn} onClick={closeVirtualKeyboard}>✕</button>
+            </div>
+            
+            <div className={styles.keyboardKeys}>
+              <div className={styles.keyboardRow}>
+                {['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map(key => (
+                  <button key={key} className={styles.keyboardKey} onClick={() => handleVirtualKeyPress(key)}>
+                    {key}
+                  </button>
+                ))}
+              </div>
+              
+              <div className={styles.keyboardRow}>
+                {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map(key => (
+                  <button key={key} className={styles.keyboardKey} onClick={() => handleVirtualKeyPress(key)}>
+                    {key}
+                  </button>
+                ))}
+              </div>
+              
+              <div className={styles.keyboardRow}>
+                {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map(key => (
+                  <button key={key} className={styles.keyboardKey} onClick={() => handleVirtualKeyPress(key)}>
+                    {key}
+                  </button>
+                ))}
+              </div>
+              
+              <div className={styles.keyboardRow}>
+                {['Z', 'X', 'C', 'V', 'B', 'N', 'M'].map(key => (
+                  <button key={key} className={styles.keyboardKey} onClick={() => handleVirtualKeyPress(key)}>
+                    {key}
+                  </button>
+                ))}
+                <button className={styles.keyboardKeyWide} onClick={() => handleVirtualKeyPress('backspace')}>
+                  ⌫
+                </button>
+              </div>
+              
+              <div className={styles.keyboardRow}>
+                <button className={styles.keyboardKeyWide} onClick={() => handleVirtualKeyPress('clear')}>
+                  Limpar
+                </button>
+                <button className={styles.keyboardKeySpace} onClick={() => handleVirtualKeyPress('space')}>
+                  Espaço
+                </button>
+                <button className={styles.keyboardKeyWide} onClick={handleVirtualKeyboardConfirm}>
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Registro para Convidado */}
+      {showGuestRegistrationModal && (
+        <div className={styles.modalOverlay} onClick={() => {}}>
+          <div className={styles.guestRegistrationModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.guestModalHeader}>
+              <h2 className={styles.guestModalTitle}>Complete seu Cadastro</h2>
+              <p className={styles.guestModalSubtitle}>Preencha seus dados para finalizar o atendimento</p>
+            </div>
+            
+            <div className={styles.guestModalForm}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Nome Completo *</label>
+                <input
+                  type="text"
+                  value={formName}
+                  onFocus={() => openVirtualKeyboard('name', formName)}
+                  readOnly
+                  placeholder="Digite seu nome"
+                  className={styles.formInput}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Número de Celular *</label>
+                <div className={styles.phoneInputWithKeypad}>
+                  <input
+                    type="tel"
+                    value={formPhone}
+                    readOnly
+                    placeholder="(00) 00000-0000"
+                    className={styles.formInput}
+                    onClick={() => setShowNumericKeypad(true)}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>CPF *</label>
+                <input
+                  type="text"
+                  value={formCpf}
+                  onFocus={() => openVirtualKeyboard('cpf', formCpf)}
+                  readOnly
+                  placeholder="000.000.000-00"
+                  className={styles.formInput}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Modelo do Aparelho *</label>
+                {!formDeviceModel ? (
+                  <>
+                    <input
+                      type="text"
+                      value={modelSearchTerm}
+                      onFocus={() => openVirtualKeyboard('modelSearch', modelSearchTerm)}
+                      readOnly
+                      placeholder="Digite para pesquisar o modelo..."
+                      className={styles.formInput}
+                    />
+                    {modelSearchTerm && (
+                      <div className={styles.modelDropdown}>
+                        {phoneModels
+                          .filter(model => 
+                            model.toLowerCase().includes(modelSearchTerm.toLowerCase())
+                          )
+                          .slice(0, 10)
+                          .map(model => (
+                            <div
+                              key={model}
+                              className={styles.modelOption}
+                              onClick={() => {
+                                setFormDeviceModel(model)
+                                setModelSearchTerm('')
+                              }}
+                            >
+                              {model}
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.selectedModel}>
+                    <span>{formDeviceModel}</span>
+                    <button
+                      type="button"
+                      className={styles.clearModelBtn}
+                      onClick={() => setFormDeviceModel('')}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                className={styles.guestModalSubmitBtn}
+                onClick={handleGuestRegistrationSubmit}
+                disabled={!formName.trim() || !formPhone.trim() || !formCpf.trim() || !formDeviceModel}
+              >
+                Finalizar Atendimento
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Seleção de Modelo para Convidado */}
+      {showGuestDeviceModal && (
+        <div className={styles.modalOverlay} onClick={() => {}}>
+          <div className={styles.guestDeviceModal} onClick={(e) => e.stopPropagation()}>
+            <button 
+              className={styles.guestModalCloseBtn}
+              onClick={() => {
+                setShowGuestDeviceModal(false)
+                setPendingCategoryId(null)
+                setModelSearchTerm('')
+              }}
+            >
+              ✕
+            </button>
+            <div className={styles.guestModalHeader}>
+              <h2 className={styles.guestModalTitle}>Qual o modelo do seu aparelho?</h2>
+              <p className={styles.guestModalSubtitle}>Selecione o modelo para ver os serviços disponíveis</p>
+            </div>
+            
+            <div className={styles.guestModalForm}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Modelo do Aparelho *</label>
+                {!formDeviceModel ? (
+                  <>
+                    <input
+                      type="text"
+                      value={modelSearchTerm}
+                      onFocus={() => openVirtualKeyboard('modelSearch', modelSearchTerm)}
+                      readOnly
+                      placeholder="Digite para pesquisar o modelo..."
+                      className={styles.formInput}
+                    />
+                    {modelSearchTerm && (
+                      <div className={styles.modelDropdown}>
+                        {phoneModels
+                          .filter(model => 
+                            model.toLowerCase().includes(modelSearchTerm.toLowerCase())
+                          )
+                          .slice(0, 10)
+                          .map(model => (
+                            <div
+                              key={model}
+                              className={styles.modelOption}
+                              onClick={() => {
+                                setFormDeviceModel(model)
+                                setModelSearchTerm('')
+                              }}
+                            >
+                              {model}
+                            </div>
+                          ))}
+                        {phoneModels.filter(model => 
+                          model.toLowerCase().includes(modelSearchTerm.toLowerCase())
+                        ).length === 0 && (
+                          <div className={styles.modelNoResults}>Nenhum modelo encontrado</div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.selectedModel}>
+                    <span>{formDeviceModel}</span>
+                    <button
+                      type="button"
+                      className={styles.clearModelBtn}
+                      onClick={() => setFormDeviceModel('')}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                className={styles.guestModalSubmitBtn}
+                onClick={handleGuestDeviceSelect}
+                disabled={!formDeviceModel}
+              >
+                Confirmar Modelo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
