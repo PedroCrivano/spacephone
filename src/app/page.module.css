@@ -592,6 +592,73 @@
   flex-shrink: 0;
 }
 
+/* Subcategory Styles for Eletrônicos */
+.subcategorySection {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.subcategoryButton {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 102, 255, 0.05);
+  border: 2px solid rgba(0, 102, 255, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.subcategoryButton:hover {
+  border-color: #0066ff;
+  background: rgba(0, 102, 255, 0.1);
+  transform: translateX(6px);
+}
+
+.subcategoryName {
+  flex: 1;
+  text-align: left;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0066ff;
+}
+
+.productsContainer {
+  margin-left: 2rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.productItemButton {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border: 2px solid rgba(0, 217, 163, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.productItemButton:hover {
+  border-color: var(--primary);
+  background: rgba(0, 217, 163, 0.05);
+  transform: translateX(4px);
+}
+
+.productItemButton.selected {
+  border-color: var(--primary);
+  background: rgba(0, 217, 163, 0.1);
+  font-weight: 600;
+}
+
 /* Carousel Styles */
 .carouselContainer {
   margin-top: 1rem;

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import styles from './page.module.css'
+import { eletronicosCategorias, eletronicosProducts, Product } from './data/eletronicos'
 
 interface Service {
   id: number
@@ -282,6 +283,7 @@ export default function Home() {
   
   const [selectedServices, setSelectedServices] = useState<SelectedService[]>([])
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+  const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [modelSearchTerm, setModelSearchTerm] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -427,8 +429,42 @@ export default function Home() {
       return
     }
     
-    // Caso contrário, expandir normalmente
-    setExpandedCategory(expandedCategory === categoryId ? null : categoryId)
+    // Se for categoria "eletronicos", expandir e resetar subcategoria
+    if (categoryId === 'eletronicos') {
+      setExpandedCategory(expandedCategory === categoryId ? null : categoryId)
+      setExpandedSubcategory(null) // Reset subcategory quando fecha/abre categoria principal
+    } else {
+      // Caso contrário, expandir normalmente
+      setExpandedCategory(expandedCategory === categoryId ? null : categoryId)
+    }
+  }
+
+  const handleSubcategoryClick = (subcategoryId: string) => {
+    setExpandedSubcategory(expandedSubcategory === subcategoryId ? null : subcategoryId)
+  }
+
+  const toggleProductService = (product: Product) => {
+    const existingIndex = selectedServices.findIndex(
+      s => s.serviceId === parseInt(product.id.replace(/[^\d]/g, ''))
+    )
+    
+    if (existingIndex >= 0) {
+      // Remove o produto
+      const newServices = [...selectedServices]
+      newServices.splice(existingIndex, 1)
+      setSelectedServices(newServices)
+    } else {
+      // Adiciona o produto
+      setSelectedServices([
+        ...selectedServices,
+        {
+          serviceId: parseInt(product.id.replace(/[^\d]/g, '')),
+          model: customerData.deviceModel,
+          optionId: product.id,
+          optionName: product.name
+        }
+      ])
+    }
   }
 
   const handleGuestDeviceSelect = () => {
@@ -674,18 +710,34 @@ export default function Home() {
   const getSelectedServicesDetails = () => {
     return selectedServices.map(selected => {
       const service = services.find(s => s.id === selected.serviceId)
-      if (!service) return null
       
-      // Se tiver opção específica, retorna com o nome e preço da opção
-      if (selected.optionId && selected.optionName) {
+      // Verifica se é um produto eletrônico
+      if (selected.optionId) {
+        const product = eletronicosProducts.find(p => p.id === selected.optionId)
+        if (product) {
+          return {
+            id: parseInt(product.id.replace(/[^\d]/g, '')),
+            name: product.name,
+            price: product.price,
+            icon: product.icon || '📦',
+            category: 'Eletrônicos',
+            model: selected.model
+          }
+        }
+        
+        // Verifica se é uma capinha
         const option = capinhaOptions.find(opt => opt.id === selected.optionId)
-        return {
-          ...service,
-          name: selected.optionName,
-          price: option?.price || service.price,
-          model: selected.model
+        if (option && selected.optionName) {
+          return {
+            ...service,
+            name: selected.optionName,
+            price: option?.price || service?.price || 0,
+            model: selected.model
+          }
         }
       }
+      
+      if (!service) return null
       
       return { ...service, model: selected.model }
     }).filter(Boolean) as (Service & { model: string })[]
@@ -1304,33 +1356,79 @@ export default function Home() {
 
                       {expandedCategory === category.id && (
                         <div className={styles.categoryItemsContainer}>
-                          {category.items.map(item => (
-                            <button
-                              key={item.id}
-                              className={`${styles.categoryItemButton} ${
-                                selectedServices.some(s => s.serviceId === item.id) ? styles.selected : ''
-                              }`}
-                              onClick={() => {
-                                const serviceItem: Service = {
-                                  id: item.id,
-                                  name: item.name,
-                                  price: item.price,
-                                  icon: item.icon,
-                                  category: category.name
-                                }
-                                toggleService(serviceItem)
-                              }}
-                            >
-                              <span className={styles.itemIcon}>{item.icon}</span>
-                              <div className={styles.itemInfo}>
-                                <h4>{item.name}</h4>
-                                <p>{item.price === 0 ? 'GRÁTIS' : `R$ ${item.price.toFixed(2)}`}</p>
-                              </div>
-                              {selectedServices.some(s => s.serviceId === item.id) && (
-                                <div className={styles.itemCheckmark}>✓</div>
-                              )}
-                            </button>
-                          ))}
+                          {/* Se for categoria Eletrônicos, mostrar subcategorias */}
+                          {category.id === 'eletronicos' ? (
+                            <>
+                              {eletronicosCategorias.subcategories.map(subcategory => (
+                                <div key={subcategory.id} className={styles.subcategorySection}>
+                                  <button
+                                    className={styles.subcategoryButton}
+                                    onClick={() => handleSubcategoryClick(subcategory.id)}
+                                  >
+                                    <span className={styles.itemIcon}>{subcategory.icon}</span>
+                                    <span className={styles.subcategoryName}>{subcategory.name}</span>
+                                    <span className={styles.expandIcon}>
+                                      {expandedSubcategory === subcategory.id ? '▼' : '▶'}
+                                    </span>
+                                  </button>
+                                  
+                                  {expandedSubcategory === subcategory.id && (
+                                    <div className={styles.productsContainer}>
+                                      {eletronicosProducts
+                                        .filter(product => product.subcategory === subcategory.id)
+                                        .map(product => (
+                                          <button
+                                            key={product.id}
+                                            className={`${styles.productItemButton} ${
+                                              selectedServices.some(s => s.optionId === product.id) ? styles.selected : ''
+                                            }`}
+                                            onClick={() => toggleProductService(product)}
+                                          >
+                                            <span className={styles.itemIcon}>{product.icon}</span>
+                                            <div className={styles.itemInfo}>
+                                              <h4>{product.name}</h4>
+                                              <p>R$ {product.price.toFixed(2)}</p>
+                                            </div>
+                                            {selectedServices.some(s => s.optionId === product.id) && (
+                                              <div className={styles.itemCheckmark}>✓</div>
+                                            )}
+                                          </button>
+                                        ))}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </>
+                          ) : (
+                            /* Outras categorias - comportamento normal */
+                            category.items.map(item => (
+                              <button
+                                key={item.id}
+                                className={`${styles.categoryItemButton} ${
+                                  selectedServices.some(s => s.serviceId === item.id) ? styles.selected : ''
+                                }`}
+                                onClick={() => {
+                                  const serviceItem: Service = {
+                                    id: item.id,
+                                    name: item.name,
+                                    price: item.price,
+                                    icon: item.icon,
+                                    category: category.name
+                                  }
+                                  toggleService(serviceItem)
+                                }}
+                              >
+                                <span className={styles.itemIcon}>{item.icon}</span>
+                                <div className={styles.itemInfo}>
+                                  <h4>{item.name}</h4>
+                                  <p>{item.price === 0 ? 'GRÁTIS' : `R$ ${item.price.toFixed(2)}`}</p>
+                                </div>
+                                {selectedServices.some(s => s.serviceId === item.id) && (
+                                  <div className={styles.itemCheckmark}>✓</div>
+                                )}
+                              </button>
+                            ))
+                          )}
                         </div>
                       )}
                     </div>
