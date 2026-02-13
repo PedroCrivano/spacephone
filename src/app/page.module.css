@@ -3325,6 +3325,110 @@
   background: #d1d7db;
 }
 
+/* Virtual Keyboard Responsive Styles */
+@media (max-width: 768px) {
+  .keyboardContainer {
+    padding: 1.5rem 1rem;
+  }
+
+  .keyboardHeader {
+    margin-bottom: 1.2rem;
+    gap: 0.8rem;
+  }
+
+  .keyboardDisplay {
+    padding: 1.2rem 1.5rem;
+    font-size: 1.5rem;
+    min-height: 60px;
+  }
+
+  .keyboardCloseBtn {
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+
+  .keyboardKeys {
+    gap: 0.6rem;
+  }
+
+  .keyboardRow {
+    gap: 0.5rem;
+  }
+
+  .keyboardKey {
+    min-width: 32px;
+    height: 50px;
+    font-size: 1.3rem;
+    border-radius: 8px;
+  }
+
+  .keyboardKeyWide {
+    min-width: 80px;
+    height: 50px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+  }
+
+  .keyboardKeySpace {
+    height: 50px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .keyboardContainer {
+    padding: 1rem 0.5rem;
+  }
+
+  .keyboardHeader {
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .keyboardDisplay {
+    padding: 1rem 1.2rem;
+    font-size: 1.2rem;
+    min-height: 50px;
+  }
+
+  .keyboardCloseBtn {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .keyboardKeys {
+    gap: 0.5rem;
+  }
+
+  .keyboardRow {
+    gap: 0.4rem;
+  }
+
+  .keyboardKey {
+    min-width: 28px;
+    height: 45px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+  }
+
+  .keyboardKeyWide {
+    min-width: 70px;
+    height: 45px;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+
+  .keyboardKeySpace {
+    height: 45px;
+    font-size: 1rem;
+    border-radius: 6px;
+  }
+}
+
 /* Guest Registration Modal Styles */
 .guestRegistrationModal {
   background: white;
