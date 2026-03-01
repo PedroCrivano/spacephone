@@ -117,67 +117,67 @@ const capinhaOptions: ProductOption[] = [
     id: 'cap-silicone-preto',
     name: 'Capinha Silicone Preta',
     price: 39.90,
-    image: '🖤',
+    image: '■',
     description: 'Proteção básica em silicone'
   },
   {
     id: 'cap-silicone-transparente',
     name: 'Capinha Silicone Transparente',
     price: 39.90,
-    image: '🧊',
+    image: '▢',
     description: 'Silicone transparente para mostrar o aparelho'
   },
   {
     id: 'cap-silicone-colorida',
     name: 'Capinha Silicone Colorida',
     price: 44.90,
-    image: '🌈',
+    image: '◆',
     description: 'Várias cores disponíveis'
   },
   {
     id: 'cap-couro',
     name: 'Capinha Couro Premium',
     price: 89.90,
-    image: '📖',
+    image: '▣',
     description: 'Couro sintético de alta qualidade'
   },
   {
     id: 'cap-militar',
     name: 'Capinha Anti-Impacto Militar',
     price: 79.90,
-    image: '🛡️',
+    image: '▨',
     description: 'Máxima proteção contra quedas'
   },
   {
     id: 'cap-magnetica',
     name: 'Capinha Magnética',
     price: 69.90,
-    image: '🧲',
+    image: '◉',
     description: 'Compatível com carregador MagSafe'
   },
 ]
 
 const services: Service[] = [
   // REPAROS
-  { id: 1, name: 'Troca de Tela', price: 299.90, icon: '📱', category: 'Reparos' },
-  { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '🔋', category: 'Reparos' },
-  { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '📷', category: 'Reparos' },
-  { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '🔘', category: 'Reparos' },
-  { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '🔊', category: 'Reparos' },
-  { id: 7, name: 'Troca de Conector', price: 99.90, icon: '🔌', category: 'Reparos' },
+  { id: 1, name: 'Troca de Tela', price: 299.90, icon: '□', category: 'Reparos' },
+  { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '⚡', category: 'Reparos' },
+  { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '○', category: 'Reparos' },
+  { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '●', category: 'Reparos' },
+  { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '♫', category: 'Reparos' },
+  { id: 7, name: 'Troca de Conector', price: 99.90, icon: '⊕', category: 'Reparos' },
   
   // PROTEÇÃO
-  { id: 10, name: 'Película de Vidro', price: 39.90, icon: '🛡️', category: 'Proteção' },
-  { id: 11, name: 'Capinha Proteção', price: 49.90, icon: '📦', category: 'Proteção', hasOptions: true },
+  { id: 10, name: 'Película de Vidro', price: 39.90, icon: '◇', category: 'Proteção' },
+  { id: 11, name: 'Capinha Proteção', price: 49.90, icon: '■', category: 'Proteção', hasOptions: true },
   
   // ACESSÓRIOS
   { id: 13, name: 'Carregadores', price: 79.90, icon: '⚡', category: 'Acessórios' },
   
   // SERVIÇOS
-  { id: 4, name: 'Limpeza Interna', price: 79.90, icon: '🧹', category: 'Serviços' },
-  { id: 8, name: 'Atualização Software', price: 59.90, icon: '⚙️', category: 'Serviços' },
-  { id: 9, name: 'Desbloqueio', price: 89.90, icon: '🔓', category: 'Serviços' },
-  { id: 12, name: 'Diagnóstico Geral', price: 0, icon: '🔍', category: 'Serviços' },
+  { id: 4, name: 'Limpeza Interna', price: 79.90, icon: '○', category: 'Serviços' },
+  { id: 8, name: 'Atualização Software', price: 59.90, icon: '⚙', category: 'Serviços' },
+  { id: 9, name: 'Desbloqueio', price: 89.90, icon: '◐', category: 'Serviços' },
+  { id: 12, name: 'Diagnóstico Geral', price: 0, icon: '◎', category: 'Serviços' },
 ]
 
 // Nova estrutura de categorias principais
@@ -205,39 +205,39 @@ const mainCategories: CategoryItem[] = [
   {
     id: 'manutencao',
     name: 'Manutenção',
-    icon: '🔧',
-    color: '#ff6b6b',
+    icon: '⚙',
+    color: '#0da84b',
     items: [
-      { id: 1, name: 'Troca de Tela', price: 299.90, icon: '📱' },
-      { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '🔋' },
-      { id: 7, name: 'Troca de Conector', price: 99.90, icon: '🔌' },
-      { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '📷' },
-      { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '🔘' },
-      { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '🔊' },
+      { id: 1, name: 'Troca de Tela', price: 299.90, icon: '□' },
+      { id: 2, name: 'Troca de Bateria', price: 149.90, icon: '⚡' },
+      { id: 7, name: 'Troca de Conector', price: 99.90, icon: '⊕' },
+      { id: 5, name: 'Troca de Câmera', price: 199.90, icon: '○' },
+      { id: 3, name: 'Reparo de Botões', price: 89.90, icon: '●' },
+      { id: 6, name: 'Reparo de Áudio', price: 129.90, icon: '♫' },
     ]
   },
   {
     id: 'eletronicos',
     name: 'Eletrônicos',
-    icon: '🎧',
-    color: '#0066ff',
+    icon: '▣',
+    color: '#0da84b',
     items: [
-      { id: 20, name: 'Fones', price: 89.90, icon: '🎧' },
+      { id: 20, name: 'Fones', price: 89.90, icon: '♫' },
       { id: 21, name: 'Carregadores', price: 79.90, icon: '⚡' },
-      { id: 22, name: 'Caixas de Som', price: 199.90, icon: '🔊' },
-      { id: 23, name: 'Carregadores Portáteis', price: 129.90, icon: '🔋' },
-      { id: 24, name: 'Cabos de Carregamento', price: 39.90, icon: '🔌' },
+      { id: 22, name: 'Caixas de Som', price: 199.90, icon: '♪' },
+      { id: 23, name: 'Carregadores Portáteis', price: 129.90, icon: '▪' },
+      { id: 24, name: 'Cabos de Carregamento', price: 39.90, icon: '─' },
     ]
   },
   {
     id: 'blindagem',
     name: 'Blindagem',
-    icon: '🛡️',
-    color: '#00cc88',
+    icon: '▨',
+    color: '#0da84b',
     items: [
-      { id: 30, name: 'Capinhas Resistentes', price: 79.90, icon: '🛡️' },
-      { id: 31, name: 'Capinhas de Silicone', price: 39.90, icon: '📦' },
-      { id: 32, name: 'Películas', price: 39.90, icon: '✨' },
+      { id: 30, name: 'Capinhas Resistentes', price: 79.90, icon: '■' },
+      { id: 31, name: 'Capinhas de Silicone', price: 39.90, icon: '▢' },
+      { id: 32, name: 'Películas', price: 39.90, icon: '◇' },
     ]
   }
 ]
@@ -246,13 +246,13 @@ const promotions: Promotion[] = [
   {
     id: 'promo-1',
     title: 'Fones Premium',
-    image: '🎧',
+    image: '♫',
     discount: '-20%'
   },
   {
     id: 'promo-2',
     title: 'Capinhas à Prova d\'Água',
-    image: '🛡️',
+    image: '■',
     discount: '-15%'
   },
   {
@@ -264,13 +264,13 @@ const promotions: Promotion[] = [
   {
     id: 'promo-4',
     title: 'Películas de Vidro',
-    image: '✨',
+    image: '◇',
     discount: '-10%'
   },
   {
     id: 'promo-5',
     title: 'Kit Completo',
-    image: '📦',
+    image: '▣',
     discount: '-30%'
   }
 ]
@@ -308,7 +308,6 @@ export default function Home() {
   const [rating, setRating] = useState(0)
   const [ratingComment, setRatingComment] = useState('')
   const [ratingSubmitted, setRatingSubmitted] = useState(false)
-  const [showNumericKeypad, setShowNumericKeypad] = useState(false)
   const [customerData, setCustomerData] = useState<CustomerData>({
     id: '',
     name: '',
@@ -367,15 +366,8 @@ export default function Home() {
     setFormCpf(formatted)
   }
 
-  const handleNumericKeypadPress = (digit: string) => {
-    const currentNumbers = formPhone.replace(/\D/g, '')
-    if (digit === 'backspace') {
-      const newNumbers = currentNumbers.slice(0, -1)
-      setFormPhone(formatPhoneNumber(newNumbers))
-    } else if (currentNumbers.length < 11) {
-      const newNumbers = currentNumbers + digit
-      setFormPhone(formatPhoneNumber(newNumbers))
-    }
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormName(e.target.value)
   }
 
   const handleVirtualKeyPress = (key: string) => {
@@ -490,7 +482,6 @@ export default function Home() {
 
   const handleLoginWithPhone = () => {
     setCurrentScreen('phone-login')
-    setShowNumericKeypad(true)
   }
 
   const handleGuestAccess = () => {
@@ -689,10 +680,18 @@ export default function Home() {
 
   const getTotal = () => {
     return selectedServices.reduce((total, selected) => {
-      // Se tiver optionId, busca o preço da opção específica
+      // Se tiver optionId, verifica se é um produto eletrônico ou uma capinha
       if (selected.optionId) {
+        // Verifica primeiro se é um produto eletrônico
+        const product = eletronicosProducts.find(p => p.id === selected.optionId)
+        if (product) {
+          return total + product.price
+        }
+        // Se não for produto eletrônico, verifica se é uma capinha
         const option = capinhaOptions.find(opt => opt.id === selected.optionId)
-        return total + (option?.price || 0)
+        if (option) {
+          return total + option.price
+        }
       }
       // Senão, usa o preço padrão do serviço
       const service = services.find(s => s.id === selected.serviceId)
@@ -920,7 +919,9 @@ export default function Home() {
                 <p className={styles.welcomePromoMain}>ATENDIMENTO VIRTUAL</p>
                 <p className={styles.welcomePromoDiscount}>DESCONTO!!!</p>
               </div>
-              <div className={styles.welcomeLogoCircle}>logo</div>
+              <div className={styles.welcomeLogoCircle}>
+                <img src="/image.png" alt="Logo" className={styles.logoImage} />
+              </div>
             </div>
             
             <div className={styles.welcomeButtonsClean}>
@@ -956,10 +957,8 @@ export default function Home() {
                 type="tel"
                 value={formPhone}
                 onChange={handlePhoneChange}
-                onFocus={() => setShowNumericKeypad(true)}
                 placeholder="(00) 00000-0000"
                 className={styles.phoneLoginInput}
-                readOnly
               />
               <button 
                 onClick={handlePhoneLogin}
@@ -970,7 +969,6 @@ export default function Home() {
               <button 
                 onClick={() => {
                   setCurrentScreen('welcome')
-                  setShowNumericKeypad(false)
                 }}
                 className={styles.backButtonSimple}
               >
@@ -981,55 +979,6 @@ export default function Home() {
           <footer className={styles.loginFooter}>
             Ao entrar neste sistema, você concorda em aceitar nossos termos de uso e políticas de privacidade.
           </footer>
-        </div>
-      )}
-
-      {/* Numeric Keypad Modal */}
-      {showNumericKeypad && (
-        <div className={styles.keypadOverlay}>
-          <div className={styles.keypadCard}>
-            <button 
-              className={styles.keypadClose}
-              onClick={() => setShowNumericKeypad(false)}
-            >
-              ✕
-            </button>
-            <div className={styles.keypadDisplay}>
-              {formPhone || '(00) 00000-0000'}
-            </div>
-            <div className={styles.keypadGrid}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                <button 
-                  key={num}
-                  className={styles.keypadButton}
-                  onClick={() => handleNumericKeypadPress(num.toString())}
-                >
-                  {num}
-                </button>
-              ))}
-              <button 
-                className={`${styles.keypadButton} ${styles.keypadButtonDelete}`}
-                onClick={() => handleNumericKeypadPress('backspace')}
-              >
-                ⌫
-              </button>
-              <button 
-                className={styles.keypadButton}
-                onClick={() => handleNumericKeypadPress('0')}
-              >
-                0
-              </button>
-              <button 
-                className={`${styles.keypadButton} ${styles.keypadButtonConfirm}`}
-                onClick={() => {
-                  handlePhoneLogin()
-                  setShowNumericKeypad(false)
-                }}
-              >
-                ✓
-              </button>
-            </div>
-          </div>
         </div>
       )}
 
@@ -1059,8 +1008,7 @@ export default function Home() {
                   id="customer-name"
                   type="text"
                   value={formName}
-                  onFocus={() => openVirtualKeyboard('name', formName)}
-                  readOnly
+                  onChange={handleNameChange}
                   placeholder="Digite seu nome"
                   className={styles.formInput}
                 />
@@ -1090,8 +1038,7 @@ export default function Home() {
                     id="customer-cpf"
                     type="text"
                     value={formCpf}
-                    onFocus={() => openVirtualKeyboard('cpf', formCpf)}
-                    readOnly
+                    onChange={handleCpfChange}
                     placeholder="000.000.000-00"
                     className={styles.formInput}
                   />
@@ -1325,11 +1272,6 @@ export default function Home() {
                 <div className={styles.promotionsScroll}>
                   {promotions.map(promo => (
                     <div key={promo.id} className={styles.promotionCard}>
-                      <div className={styles.promotionImage}>{promo.image}</div>
-                      {promo.discount && (
-                        <div className={styles.promotionDiscount}>{promo.discount}</div>
-                      )}
-                      <h3 className={styles.promotionTitle}>{promo.title}</h3>
                     </div>
                   ))}
                 </div>
@@ -1662,8 +1604,7 @@ export default function Home() {
                 <input
                   type="text"
                   value={formName}
-                  onFocus={() => openVirtualKeyboard('name', formName)}
-                  readOnly
+                  onChange={handleNameChange}
                   placeholder="Digite seu nome"
                   className={styles.formInput}
                 />
@@ -1675,10 +1616,9 @@ export default function Home() {
                   <input
                     type="tel"
                     value={formPhone}
-                    readOnly
+                    onChange={handlePhoneChange}
                     placeholder="(00) 00000-0000"
                     className={styles.formInput}
-                    onClick={() => setShowNumericKeypad(true)}
                   />
                 </div>
               </div>
@@ -1688,8 +1628,7 @@ export default function Home() {
                 <input
                   type="text"
                   value={formCpf}
-                  onFocus={() => openVirtualKeyboard('cpf', formCpf)}
-                  readOnly
+                  onChange={handleCpfChange}
                   placeholder="000.000.000-00"
                   className={styles.formInput}
                 />
